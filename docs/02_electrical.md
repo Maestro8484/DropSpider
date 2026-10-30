@@ -44,6 +44,7 @@ D27, D26, D25 sit side by side on the ESP32 header in the same order as the expa
 - The ESP32 browned out on PC USB and on a 2 A USB hub with the LD2450 attached (2026-10-07): bench the radar on the 12 V adapter through the buck, never on USB alone.
 - USB can stay connected to a PC for the console while 12 V is on.
 - Ceiling install: run 12 V up with a 5.5 x 2.1 mm DC extension cable. Keep the adapter at the outlet, never at the ceiling.
+- The adapter is on a Tasmota smart plug (`http://192.168.1.231/`, name Tasmota1). Its timers, read back 2026-10-30: ON at sunset, OFF at 23:30, every day. So the device boots at dusk each evening and loses power at 23:30; a spider still down at 23:30 is down at the next dusk, and boot never rewinds on its own (doc 04). The plug's page answers `cm?cmnd=Timers` and `cm?cmnd=Power`.
 
 ## Logic-level check (V1, required before first motor run)
 
