@@ -55,6 +55,8 @@ What's proven, what isn't, and what could stop you building it. Evidence for eve
 
 - I'm building the inverted install on the beam's face (doc 06, V18): CAD-checked, not built. The ceiling install stays documented in doc 06.
 - No stall sensing; the expansion board hides the TMC2209 UART pin.
+- A power-up with the spider down (the smart plug's schedule cutting power mid-cycle or during a hanging fault) stops on a fault and waits for a hand: Bring it home on the page, 3 presses of the switch, or `rehome`. Boot never rewinds on its own (hard rule). A spider held or snagged through the three winds after a drop ends on the same fault and waits the same way; the device does not try again later on its own. Proposal in `ROADMAP.md` 0b.
+- The firmware counts the pulses it sends, not what the spool turned: line pulled off the spool by hand, or paid out when the motor is pushed past a pole (about 2.4 N at the barrel), is invisible until the rewind misses the switch. The slow retries (doc 04, rewind rule) are what make up the difference.
 - Static IP address not set yet; DHCP only.
 - One shared update password, from `secrets.ini`. Fine on a home network.
 

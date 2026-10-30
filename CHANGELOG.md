@@ -2,6 +2,17 @@
 
 Finished work, newest first, one plain line each. Shape from Keep a Changelog (keepachangelog.com). Work still to do is in `ROADMAP.md`; the full detail of any line is in the git history for that date.
 
+## 2026-10-30
+
+### Changed
+- Rewind after a drop (BUILT `fw-15+1`, not flashed): if the slow 2 1/2 turn retry misses the switch too, the rewind lowers 1/2 turn again, waits 2 s and winds the whole line at 80 rpm, the same wind as `rehome`, before it calls a fault. A spider pulled down by hand and let go now comes home on its own, however much line was pulled (the old ladder gave up past about 430 mm of extra line and left it hanging on a fault). A held or snagged spider still ends on the fault, about 18 s after the drop instead of 9.
+- A rewind that ran its whole count without the switch now marks the driver for the reset the lock already does after a switch stop, since the motor may have stalled against the top.
+- Page: the Last cycles chip "home on the second, slow try" reads "home on a slow retry" and its note says why a first wind can miss.
+
+### Added
+- `tools/porch_watch.py`: a fault line, a fault word on the board, the spider not home with nothing moving for 30 s, or the board off the network for a minute, each print in capitals and beep three times, so a fault at the porch is heard from inside the house.
+- Doc 01: what gives first if someone pulls the hanging spider (the motor pays out line above about 2.4 N; then the knots at 24 to 39 N, then the thread at 49 N), and the weak-link suggestion at the spider end.
+
 ## 2026-10-25
 
 ### Added

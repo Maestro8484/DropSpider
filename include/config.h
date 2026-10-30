@@ -82,7 +82,14 @@
 #define FEED_RPM            80     // the last part of every rewind after a drop, and the whole of a reset wind
 #define FEED_ZONE_TURNS     2.25f  // a rewind after a drop slows to FEED_RPM this far before the end of its count
 #define RETRY_DOWN_STEPS    (STEPS_PER_TURN / 2)       // a rewind that misses the switch lowers this much (about 78 mm)...
-#define RETRY_UP_STEPS      (STEPS_PER_TURN * 5 / 2)   // ...then winds this far at FEED_RPM, once, before it calls a fault
+#define RETRY_UP_STEPS      (STEPS_PER_TURN * 5 / 2)   // ...then winds this far at FEED_RPM, once...
+// ...and if that misses too, the rewind lowers 1/2 turn again and winds the whole line at
+// FEED_RPM, the way `rehome` does, this many times before it calls a fault (2026-10-30: a
+// spider pulled by hand, or hanging after a missed flap, comes home on its own instead of
+// waiting for someone to notice it). The cost of a wrong try is a stalled motor against the
+// flap's hard stop for a few seconds, about 2.4 N on the line.
+#define REHOME_TRIES        1
+#define REHOME_SETTLE_MS    2000   // the swing settles this long before the whole-line wind
 #define RETRY_SETTLE_MS     1000   // swing settles between the two
 #define BUTTON_DEBOUNCE_MS  40
 #define LIMIT_DEBOUNCE_MS   4      // short on purpose: this reading stops the motor

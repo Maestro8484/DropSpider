@@ -152,7 +152,7 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
  <h2>Last cycles</h2>
  <div id="cyc"><div class="sub">none yet</div></div>
  <div class="sub" id="cycsum" style="margin-top:8px"></div>
- <div class="sub">The last 20, newest first, kept through a power cut. "Home, switch first try" is the normal ending; "on the second, slow try" means the stopper missed the flap once and the retry caught it; "count only" means the limit switch is off in settings; "stopped" needs a look.</div>
+ <div class="sub">The last 20, newest first, kept through a power cut. "Home, switch first try" is the normal ending; "on a slow retry" means the first wind missed the switch (the stopper slipped past the flap, or the spider hung lower than the count said) and a slow retry brought it home; "count only" means the limit switch is off in settings; "stopped" needs a look.</div>
 </div>
 
 <div class="card">
@@ -363,7 +363,7 @@ function tick(){fetch('/api/status?since='+since).then(r=>r.json()).then(s=>{
 }).catch(()=>{})}
 let lastLine='',cycSeq=-1;
 function cycles(){fetch('/api/cycles').then(r=>r.json()).then(d=>{
- const E=['home, switch first try','home on the second, slow try','count only, no switch','stopped on a fault','stopped by hand'],C=['ok','wa','wa','no','no'],K=['drop','bring it home','set drop length'];
+ const E=['home, switch first try','home on a slow retry','count only, no switch','stopped on a fault','stopped by hand'],C=['ok','wa','wa','no','no'],K=['drop','bring it home','set drop length'];
  let h='',n=[0,0,0,0,0];
  for(const x of d.cycles){if(x.boot===d.boot)n[x.end]++;const ago=x.boot===d.boot?ms(Math.max(0,d.uptime-x.up)*1000)+' ago':'before a power cut';
   const what=x.kind?K[x.kind]:'drop '+x.n+', fired by '+x.trig;

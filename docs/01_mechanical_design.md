@@ -98,6 +98,12 @@ The spool is free, so nothing stops the spider until the line runs out. At that 
 
 The same swing means the knot can end up to half a turn either side of the bottom, which is why the rewind overshoots by 0.75 turn and relies on the stopper.
 
+## If someone pulls the hanging spider
+
+Worked out 2026-10-30 from the numbers above, not tested. While the spider hangs (the 1.2 to 1.5 s before the rewind) the spool sits on the clutch and the motor holds it. The motor's hold at the barrel is about 2.4 N (the 6 N.cm NEMA 11 at 0.66 A on the 25 mm radius): a pull harder than that pushes the rotor past its poles and the line pays out, with no damage, until the knot swings to the bottom of the barrel. So the motor is the first fuse, and a person pulling at walking pace simply pulls line off the spool. The firmware does not see the extra line (it counts the pulses it sent, not what turned); the rewind after it misses the switch and the slow retries bring the spider home (doc 04, the rewind rule). At the knot the pull goes into the thread. In order of what gives first: the knot at the barrel or the hitch at the swivel (a knot keeps 50 to 80 percent of a thread's strength, so about 24 to 39 N), then the thread itself at 49 N. The clutch sees 1.2 N.m at 49 N, inside its 1.76 N.m rating; the fairlead block, the base and the steel braces of the inverted install carry a downward pull of 49 N with margin to spare (doc 06). With the spider at home and the finger in, a pull goes tooth to finger to the printed ledge instead; not calculated, and at home the spider hangs under the device out of a child's reach.
+
+A deliberate weak link at the bottom end is the cheap insurance: a short piece of the old 3 lb nylon monofilament (breaks at 9 to 18 N) between the swivel and the spider. Then a grab-and-run parts there, the stopper, swivel and barrel knot stay, and a new spider ties on in a minute instead of the spool coming apart to re-anchor the thread. The normal loads never come near it: the stop at the end of a motor-led drop puts about 0.5 N on the line, and the estimated 11 N slam at the knot happens only if the motor loses its grip mid-drop, which has not happened since the driver's logic supply was wired (2026-10-07).
+
 ## Materials and print settings
 
 | File | Qty | Orientation | Infill | Walls | Supports | Brim |

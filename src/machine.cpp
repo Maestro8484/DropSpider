@@ -213,6 +213,10 @@ static int rehomeWasArmed = 0;
 // wind 2 1/2 turns at FEED_RPM). rewindCarry holds what the first wind netted.
 static bool rewindRetried = false;
 static long rewindCarry = 0;
+// If the retry misses too, up to REHOME_TRIES whole-line slow winds follow (each after a
+// 1/2 turn lowering), before the fault. retryUpSteps is what the next RETRY_WAIT winds.
+static int  rewindRehomes = 0;
+static long retryUpSteps = RETRY_UP_STEPS;
 static long slowAt = 0;                 // steps into a rewind where it drops to FEED_RPM; 0 = never
 
 // The last cycles, for the page (owner 2026-10-14). recKind is set where the rewind
@@ -436,6 +440,7 @@ static void startRewind(int rpm = 0) {
   homeLost();
   ignoreLimit = false;
   rewindRetried = false; rewindCarry = 0; slowAt = 0;
+  rewindRehomes = 0; retryUpSteps = RETRY_UP_STEPS;
   if (limitHome()) {
     if (cycle) {
       // The spider has just fallen, so a pressed switch is lying. Wind the counted
@@ -520,6 +525,7 @@ static bool finishRewind() {
     strike("full rewind ran without the limit switch closing: either the bead was already above the flap, "
            "or the spool did not follow the motor (one-way bearing slipping or in backwards)");
     faultNow = true;
+    driverSuspect = true;      // the motor may have stalled against the top: the lock resets the driver with the finger in
   }
   return stalled;
 }
@@ -887,6 +893,23 @@ static void step() {
         enter(ST_RETRY_DOWN);
         break;
       }
+      // The slow try missed too, after a drop: the spider hangs farther down than the count
+      // says (pulled by hand, a slipped flap, a stall that freed itself). Lower 1/2 turn once
+      // more and wind the whole line slowly, as bring-it-home does, before giving up. The
+      // switch cut-off still ends it; a person holding the spider just stalls the motor.
+      if (rewindRetried && cycle && rewindRehomes < REHOME_TRIES && rewindMissed()) {
+        long ranSoFar = stepper->getCurrentPosition() - moveStartPos + rewindCarry;
+        rewindRehomes++;
+        rewindCarry = ranSoFar - RETRY_DOWN_STEPS;
+        retryUpSteps = rewindSteps();
+        driverSuspect = true;                   // that wind may have stalled: the lock at the end resets the driver
+        logf("[rewind] the switch still did not close after the slow try (%d mm wound in all): lowering 1/2 turn, "
+             "then winding the whole line at %d rpm, the way bring-it-home does, before calling a fault",
+             (int)(ranSoFar * mmPerStep()), FEED_RPM);
+        if (!startMove(-RETRY_DOWN_STEPS, FEED_RPM)) logf("[rewind] lowering move would not start");
+        enter(ST_RETRY_DOWN);
+        break;
+      }
       // Stalled against the top, or stopped by the switch: finger in now, driver reset
       // with the finger in, then the 1/8 turn back-off lets the spool down onto a tooth
       // and the bead clear of the flap. Owner rule 2026-10-06: the motor never loses
@@ -920,8 +943,8 @@ static void step() {
       break;
 
     case ST_RETRY_WAIT:
-      if (inState() < RETRY_SETTLE_MS) break;
-      if (!startMove(RETRY_UP_STEPS, FEED_RPM)) logf("[rewind] second try would not start");
+      if (inState() < (rewindRehomes ? REHOME_SETTLE_MS : RETRY_SETTLE_MS)) break;
+      if (!startMove(retryUpSteps, FEED_RPM)) logf("[rewind] %s would not start", rewindRehomes ? "whole-line wind" : "second try");
       enter(ST_REWIND);
       break;
 
