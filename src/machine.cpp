@@ -347,7 +347,7 @@ static void readInputs() {
         pressN++; pressLast = now;
       }
     }
-    logf("[limit] switch %s", l ? "closed" : "open");
+    logf("[limit] switch %s", l ? "closed" : "open");   // kept: the rewind problem of 2026-10-31 needs every switch edge in the log
   }
 }
 
@@ -822,10 +822,10 @@ static void step() {
       // idle is still driver off whenever nobody is approaching.
       if (S.armed && viaRadar) {
         if (radarApproaching()) {
-          if (!driverIsOn) { driverOn(); logf("[wake] motor driver on: someone approaching"); }
+          if (!driverIsOn) driverOn();        // no log line: the page's "motor powered" chip shows it (2026-10-31)
           preWokeAt = now;
         } else if (preWokeAt && driverIsOn && now - preWokeAt >= PREWAKE_HOLD_MS) {
-          driverOff(); preWokeAt = 0; logf("[wake] motor driver off again: nobody approaching");
+          driverOff(); preWokeAt = 0;
         }
       }
       break;
@@ -979,12 +979,10 @@ static void step() {
       } else if (cycle) {
         cycle = false;
         if (faultRun >= FAULT_STRIKES) {
-          logf("[cycle] done, %d faults in a row: stopped. Send clear, or press BOOT.", faultRun);
-          logf("[done] drop (stopped on faults)");
+          logf("[done] drop, %d faults in a row: stopped. Send clear, or press BOOT.", faultRun);
           enter(ST_FAULT);
         } else {
-          logf("[cycle] done, lockout %d ms", S.rearmMs);
-          logf("[done] drop");
+          logf("[done] drop, lockout %d ms", S.rearmMs);
           enter(ST_LOCKOUT);
         }
       } else {

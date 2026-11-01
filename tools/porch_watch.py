@@ -99,7 +99,7 @@ def main():
                         last_fire = why
                 except Exception:
                     pass
-            if line.startswith("[cycle] done"):
+            if line.startswith("[done] drop"):
                 print(f"{stamp()}  ---- cycle {s['drops']} done, measured drop {s['measuredDrop']} mm, fault '{s['fault']}'")
         since = s["next"]
         time.sleep(0.4)

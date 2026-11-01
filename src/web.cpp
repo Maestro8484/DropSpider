@@ -69,6 +69,10 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
  #savebar{display:none;position:sticky;top:8px;z-index:6;background:#3a2e12;border:1px solid var(--warn);color:var(--warn);border-radius:10px;padding:10px 12px;margin-bottom:14px;align-items:center;gap:10px;font-size:14px}
  #savebar.on{display:flex} #savebar span{flex:1} #savebar button{background:var(--warn);color:#1a1200;padding:8px 14px}
  label.dirty input,label.dirty select{border-color:var(--warn);box-shadow:0 0 0 2px rgba(232,180,74,.35)}
+ #savebar.done{background:#12331f;border-color:var(--go);color:var(--go)} #savebar.done button{display:none}
+ label.saved input,label.saved select{border-color:var(--go);box-shadow:0 0 0 2px rgba(74,196,122,.35)}
+ #savedrow{font-size:14px;margin:0 0 8px;color:var(--go)} #savedrow.wa{color:var(--warn)}
+ small.u{color:#a995ff;font-weight:600}
  label.off>span:first-child::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--dim);margin-right:6px;vertical-align:middle}
  .card>h2{cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
  .card.fold>*:not(h2){display:none} .card.fold>h2{margin:0}
@@ -119,9 +123,9 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
  <div class="q">How far it drops</div>
  <div class="fact" id="llen">-</div>
  <div class="g3">
-  <button onclick="leolen(-100)">10 cm shorter</button>
+  <button onclick="leolen(-102)">4" shorter</button>
   <button class="p" onclick="c('drop')">TEST DROP</button>
-  <button onclick="leolen(100)">10 cm longer</button>
+  <button onclick="leolen(102)">4" longer</button>
  </div>
  <div class="q">Radar</div>
  <div class="g2">
@@ -160,25 +164,25 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
  <div id="rchips"></div>
  <canvas id="scope"></canvas>
  <div class="g" style="margin-top:8px">
-  <button id="rzoom" onclick="rzoomT()">Show 3 m</button>
+  <button id="rzoom" onclick="rzoomT()">Show 10 ft</button>
   <button id="rpause" onclick="rpauseT()">Freeze</button>
  </div>
  <div id="rtab"></div>
  <h3>Trigger rule</h3>
- <label><span>Walking speed that fires<small>cm/s toward the sensor, 10 to 150. Slower than this never fires</small></span><input type="number" id="f_approach" min="10" max="150" onchange="c('approach '+this.value)"></label>
- <label><span>Fire distance<small>cm from the sensor, straight line. Fires when someone approaching is this close; 0 = off</small></span><input type="number" id="f_firecm" min="0" max="1100" onchange="c('firecm '+this.value)"></label>
+ <label><span>Walking speed that fires<small class="u" id="u_f_approach"></small><small>typed in cm/s toward the sensor, 10 to 150. Slower than this never fires</small></span><input type="number" id="f_approach" min="10" max="150" onchange="c('approach '+this.value)"></label>
+ <label><span>Fire distance<small class="u" id="u_f_firecm"></small><small>typed in cm from the sensor, straight line. Fires when someone approaching is this close; 0 = off</small></span><input type="number" id="f_firecm" min="0" max="1100" onchange="c('firecm '+this.value)"></label>
  <label><span>Lead time<small>ms, 200 to 2000. Also fires early when distance divided by speed is under this</small></span><input type="number" id="f_leadms" min="200" max="2000" onchange="c('leadms '+this.value)"></label>
- <label><span>Clear distance<small>cm. The doorway counts as clear, and it re-arms, when nobody moving reads closer than this for 2 s; someone standing still never holds it</small></span><input type="number" id="f_clearcm" min="50" max="1100" onchange="c('clearcm '+this.value)"></label>
+ <label><span>Clear distance<small class="u" id="u_f_clearcm"></small><small>typed in cm. The doorway counts as clear, and it re-arms, when nobody moving reads closer than this for 2 s; someone standing still never holds it</small></span><input type="number" id="f_clearcm" min="50" max="1100" onchange="c('clearcm '+this.value)"></label>
  <label><span>Re-arm anyway after<small>ms of waiting for the doorway to clear, 0 to 600000; 0 = wait for clear. Still needs a fresh approach to fire</small></span><input type="number" id="f_clearms" min="0" max="600000" step="1000" onchange="c('clearms '+this.value)"></label>
  <label><span>Direction reads backwards<small>tick if the card says going away while you walk toward it (test S2)</small></span><input type="checkbox" id="f_radarinv" onchange="c('radarinv '+(this.checked?1:0))"></label>
  <label><span>What fires the drop<small>serial = the rule above; OUT pin = whenever the sensor sees someone</small></span><select id="f_sensor" onchange="c('sensor '+this.value)"><option value="4002">C4002 serial, OUT pin if silent</option><option value="2410">OUT pin on GPIO33 only</option></select></label>
  <h3>Sensor's own detect range</h3>
- <label><span>Closest to farthest<small>cm, 0 to 1100, kept in the sensor. Closest goes past the hanging spider (test S2). Rounds to the range step</small></span><span class="pair"><input type="number" id="rclose" min="0" max="1100"> to <input type="number" id="rfar" min="0" max="1100"></span></label>
+ <label><span>Closest to farthest<small class="u" id="u_rrange"></small><small>typed in cm, 0 to 1100, kept in the sensor. Closest goes past the hanging spider (test S2). Rounds to the range step</small></span><span class="pair"><input type="number" id="rclose" min="0" max="1100"> to <input type="number" id="rfar" min="0" max="1100"></span></label>
  <div class="g" style="margin-top:8px">
   <button onclick="rrange()">Set range</button>
   <button onclick="c('radar range')">Read range</button>
  </div>
- <label><span>Range step<small>20 cm steps reach 4.9 m and let a close cut-off land where it is set; 80 cm steps reach 11.6 m</small></span><select id="rres" onchange="c('radar res '+this.value)"><option value="80">80 cm, to 11.6 m</option><option value="20">20 cm, to 4.9 m</option></select></label>
+ <label><span>Range step<small>20 cm steps reach 4.9 m and let a close cut-off land where it is set; 80 cm steps reach 11.6 m</small></span><select id="rres" onchange="c('radar res '+this.value)"><option value="80">2' 7" (0.80m) steps, to 38' 1" (11.60m)</option><option value="20">0' 8" (0.20m) steps, to 16' 1" (4.90m)</option></select></label>
  <label><span>Motion sensitivity<small>the moving-person reading. Lower if the dog or the swinging spider fires it</small></span><select id="rsensm" onchange="c('radar sens motion '+this.value)"><option value="low">low</option><option value="mid">mid</option><option value="high">high</option><option value="custom" disabled>custom (from calibration)</option></select></label>
  <label><span>Presence sensitivity<small>the still-person reading. Lower if furniture or a screen holds the doorway busy</small></span><select id="rsensp" onchange="c('radar sens presence '+this.value)"><option value="low">low</option><option value="mid">mid</option><option value="high">high</option><option value="custom" disabled>custom (from calibration)</option></select></label>
  <label><span>Keeps a person for<small>s after it last saw them. Shorter = the doorway clears sooner</small></span><input type="number" id="rdelay" min="0" max="600" onchange="c('radar delay '+this.value)"></label>
@@ -240,11 +244,12 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 
 <div class="card">
  <h2>Settings</h2>
+ <div id="savedrow"></div>
  <div id="sets"></div>
  <div class="g" style="margin-top:10px">
   <button onclick="if(confirm('Load factory values? (not saved until Save)')){built=0;c('defaults')}">Factory values</button>
  </div>
- <div class="sub">A value takes effect as you change it. A changed value has an amber edge until it is saved from the Save bar at the top of the page; unsaved values are lost at a power cut. A dot before a name means it differs from the factory value.</div>
+ <div class="sub">A value takes effect as you change it. A changed value has an amber edge until it is saved from the Save bar at the top of the page; unsaved values are lost at a power cut. After Save settings the bar turns green and names what the board now holds, each saved field gets a green edge for a few seconds, and the line above the list says when this page last saved. A dot before a name means it differs from the factory value. Lengths read feet and inches with metres in brackets; the boxes take the board's own unit (mm or cm) and the purple readout beside each shows what that is.</div>
 </div>
 
 <div class="card">
@@ -273,16 +278,27 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 <script>
 const SETS=[
  ["setlock","Finger lock angle","degrees"],["setrel","Finger release angle","degrees"],
- ["line","Line length","mm, barrel knot to stop bead, line straight not pulled"],["rpm","Rewind speed","rpm, 30 to 600"],
+ ["line","Line length","typed in mm, barrel knot to stop bead, line straight not pulled"],["rpm","Rewind speed","rpm, 30 to 600"],
  ["dir","Rewind direction","0 or 1, flip if the clutch just slips"],["settle","Hang at the bottom","ms before rewind"],
  ["rearm","Lockout after a scare","ms"],["limit","Limit switch fitted","1 = the switch stops the rewind"],
  ["liminv","Limit switch reads backwards","1 = flip it"],
- ["dropmm","Drop distance","mm the spider travels, 100 to line minus 70"],
- ["droprpm","Drop top speed","rpm, 100 to 900. 610 rpm is about 1 m/s"],
+ ["dropmm","Drop distance","typed in mm, how far the spider travels, 100 to line minus 70"],
+ ["droprpm","Drop top speed","rpm, 100 to 900. 610 rpm is about 3.3 ft/s (1 m/s)"],
  ["dropacc","Drop start rate","steps/s&sup2;, 20000 to 400000. 100000 is about 1 g"],
  ["dropdec","Drop stop rate","steps/s&sup2;, 10000 to 200000. Keep low: the motor has to stop the spider"],
  ["relms","Finger travel before the drop","ms, 100 to 600"]];
 let st=null,armed=false,built=0,since=0;
+// ---- every length on the page reads feet and inches, metres in brackets (owner 2026-10-31):
+// 4' 2" (1.27m). imp() rewrites "1267 mm", "270 cm" and "47 cm/s" inside the board's own lines.
+function ft(mm){mm=Math.round(+mm||0);const i=mm/25.4;let f=Math.floor(i/12),n=Math.round(i-f*12);if(n===12){f++;n=0}return f+"' "+n+'" ('+(mm/1000).toFixed(2)+'m)'}
+function fcm(cm){return ft(cm*10)}
+function fsp(cms){return (cms/30.48).toFixed(1)+' ft/s ('+(cms/100).toFixed(2)+' m/s)'}
+function imp(s){return String(s).replace(/(-?\d+(?:\.\d+)?) (cm\/s|mm|cm)\b/g,(m,n,u)=>u==='cm/s'?fsp(+n):u==='mm'?ft(+n):fcm(+n))}
+// ---- Save settings is confirmed by the board, not by the button (owner 2026-10-31): the names
+// unsaved when Save was pressed are held in pend; when the next status says nothing is unsaved,
+// the Save bar turns green with those names and each field gets a green edge for 7 s.
+let pend=null,pendAt=0,doneUntil=0,doneTxt='',lastSavedAt=0,lastSavedN=0;
+function pendSave(names){pend=names;pendAt=performance.now()}
 // ---- the answer appears where the button was pressed (owner 2026-10-14): a strip under
 // the button row (or the setting) shows the command's reply, then the log lines that
 // follow for 8 s. A refusal stays 10 s, anything else 6 s.
@@ -290,41 +306,42 @@ const rp={el:null,at:0,hold:0};
 function strip(t){if(!t)return null;const host=t.closest('.g,label,.card');if(!host)return null;
  let s=host.classList.contains('card')?host.querySelector(':scope>.reply'):host.nextElementSibling&&host.nextElementSibling.classList.contains('reply')?host.nextElementSibling:null;
  if(!s){s=document.createElement('div');s.className='reply';if(host.classList.contains('card'))host.appendChild(s);else host.insertAdjacentElement('afterend',s)}return s}
-function showReply(el,text){if(!el||!text)return;const bad=/^refused|^\[fault|^unknown/.test(text);el.textContent=text;el.classList.toggle('bad',bad);el.classList.add('on');rp.el=el;rp.at=performance.now();rp.hold=bad?10000:6000}
+function showReply(el,text){if(!el||!text)return;const bad=/^refused|^\[fault|^unknown/.test(text);el.textContent=imp(text);el.classList.toggle('bad',bad);el.classList.add('on');rp.el=el;rp.at=performance.now();rp.hold=bad?10000:6000}
 setInterval(()=>{if(rp.el&&performance.now()-rp.at>rp.hold){rp.el.classList.remove('on');rp.el=null}},500);
 function c(cmd){cmd=(cmd||'').trim();if(!cmd)return;const ev=window.event,el=strip(ev&&ev.target&&ev.target.closest?ev.target:null);
+ if(cmd==='save')pendSave(st&&st.unsaved?st.unsaved.slice():[]);
  fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'c='+encodeURIComponent(cmd)}).then(r=>r.text()).then(t=>{
   const lines=t.split('\n').filter(l=>l&&!l.startsWith('> '));showReply(el,lines.length?lines[0]:'sent: '+cmd)}).catch(()=>showReply(el,'the board did not answer')).then(tick)}
 function nudge(d){if(!st)return;c('servo '+Math.max(0,Math.min(180,st.servoDeg+d)))}
 // ---- Leo's card (owner 2026-10-25): three buttons judge the last drop and move one knob,
 // the fire distance, then save. The radar fires the instant it first sees someone when
 // the fire distance is above that first sighting, so TOO LATE then points at the radar.
-function cs(cmd){fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'c='+encodeURIComponent(cmd)}).then(()=>fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'c=save'})).then(tick)}
+function cs(cmd){fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'c='+encodeURIComponent(cmd)}).then(()=>{const k=cmd.split(' ')[0];if(st&&st.settings&&k in st.settings)pendSave([k]);return fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'c=save'})}).then(tick)}
 function lsay(t){document.getElementById('lsay').textContent=t}
 function fireDist(){const r=rlast&&rlast.r;if(!r||!r.why)return 0;const m=/(\d+) cm away/.exec(r.why);return m?+m[1]:0}
 function leo(v){if(!st)return;const fc=st.settings.firecm||0,fd=fireDist();
  if(!fd){lsay('No drop fired by the radar yet. Have someone walk up first.');return}
- if(v==='perfect'){cs('firecm '+fc);lsay('Saved. The radar fires when someone is about '+fd+' cm away. Leave it there.');return}
- if(v==='early'){const n=Math.max(60,Math.min(fc,fd)-40);cs('firecm '+n);lsay('OK, later: it now fires at '+n+' cm instead of '+fd+'. Try another walk.');return}
- if(fd<fc-20){lsay('The radar already fires the second it sees someone (at '+fd+' cm). To be earlier: press Learn the empty yard, or tilt the radar a little toward the street. The fall itself takes about '+((st.landMs||2000)/1000).toFixed(1)+' s and cannot be shortened from here.')}
- else{const n=Math.min(500,fc+40);cs('firecm '+n);lsay('OK, earlier: it now fires at '+n+' cm instead of '+fc+'. Try another walk.')}}
+ if(v==='perfect'){cs('firecm '+fc);lsay('Saved. The radar fires when someone is about '+fcm(fd)+' away. Leave it there.');return}
+ if(v==='early'){const n=Math.max(60,Math.min(fc,fd)-40);cs('firecm '+n);lsay('OK, later: it now fires at '+fcm(n)+' instead of '+fcm(fd)+'. Try another walk.');return}
+ if(fd<fc-20){lsay('The radar already fires the second it sees someone (at '+fcm(fd)+'). To be earlier: press Learn the empty yard, or tilt the radar a little toward the street. The fall itself takes about '+((st.landMs||2000)/1000).toFixed(1)+' s and cannot be shortened from here.')}
+ else{const n=Math.min(500,fc+40);cs('firecm '+n);lsay('OK, earlier: it now fires at '+fcm(n)+' instead of '+fcm(fc)+'. Try another walk.')}}
 function leolen(d){if(!st)return;const max=st.settings.line-70,n=Math.max(100,Math.min(max,st.settings.dropmm+d));
- if(n===st.settings.dropmm)lsay(d>0?'That is as far as the line allows ('+max+' mm). A longer drop needs a longer line.':'That is the shortest drop.');else{cs('dropmm '+n);lsay('Drop is now '+n+' mm ('+(n/25.4/12).toFixed(1)+' ft). Press TEST DROP to see it.')}}
+ if(n===st.settings.dropmm)lsay(d>0?'That is as far as the thread allows ('+ft(max)+'). A longer drop needs a longer thread tied on first, then Set drop length here on the Bench: motor card. Raising Line length in Settings without a longer thread sends the spider into the barrel knot (2026-10-31).':'That is the shortest drop.');else{cs('dropmm '+n);lsay('Drop is now '+ft(n)+', saving. Press TEST DROP to see it.')}}
 function leoTick(s){const r=rlast&&rlast.r,fd=fireDist();
  const big=!s.settings.active?'OFF: deactivated (see the red banner)':s.fault?'STOPPED: '+s.fault:s.busy?(s.state.indexOf('rewind')>=0?'Winding back up':'DROPPING'):(s.armed?'Ready and watching':'Asleep (not armed)');
  document.getElementById('lstate').textContent=big;
- document.getElementById('lfact').textContent=fd?'Last drop: the radar fired when the person was '+fd+' cm ('+(fd/30.48).toFixed(1)+' ft) away, and the spider hit bottom '+((s.landMs||0)/1000).toFixed(1)+' s later. Drops so far: '+s.drops:'No drop fired by the radar yet this power-up. Drops so far: '+s.drops;
- document.getElementById('llen').textContent='Drops '+s.settings.dropmm+' mm ('+(s.settings.dropmm/25.4/12).toFixed(1)+' ft). The line allows up to '+(s.settings.line-70)+' mm.';
+ document.getElementById('lfact').textContent=fd?'Last drop: the radar fired when the person was '+fcm(fd)+' away, and the spider hit bottom '+((s.landMs||0)/1000).toFixed(1)+' s later. Drops so far: '+s.drops:'No drop fired by the radar yet this power-up. Drops so far: '+s.drops;
+ document.getElementById('llen').textContent='Drops '+ft(s.settings.dropmm)+'. The line allows up to '+ft(s.settings.line-70)+'.';
  document.getElementById('larm').textContent=s.armed?'Disarm (go to sleep)':'Arm (wake up)';
  if(r&&r.calib>0)lsay('Learning the yard: '+r.calib+' s left, stay out of its view.')}
-function teachAsk(){if(!st)return;if(confirm('Set the drop length to where the spider hangs now? It winds up to the switch, counts the turns, and SAVES that count as the drop distance (now '+st.settings.dropmm+' mm). To bring it home without changing the drop distance, use Bring it home instead.'))c('teach')}
+function teachAsk(){if(!st)return;if(confirm('Set the drop length to where the spider hangs now? It winds up to the switch, counts the turns, and SAVES that count as the drop distance (now '+ft(st.settings.dropmm)+'). To bring it home without changing the drop distance, use Bring it home instead.'))c('teach')}
 function lbl(k){const f=document.getElementById('f_'+k);const s=f&&f.closest('label')&&f.closest('label').querySelector('span');return s&&s.firstChild?s.firstChild.textContent.trim():k}
 function rrange(){const A=document.getElementById('rclose'),B=document.getElementById('rfar');if(A.value===''||B.value==='')return;delete A.dataset.touched;delete B.dataset.touched;c('radar range '+A.value+' '+B.value)}
 function wifi(){const s=document.getElementById('ssid').value,p=document.getElementById('pass').value,ip=document.getElementById('ip').value.trim();
  fetch('/api/wifi',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'ssid='+encodeURIComponent(s)+'&pass='+encodeURIComponent(p)+'&ip='+encodeURIComponent(ip)}).then(()=>alert('Saved. Restarting.'))}
 function ms(v){if(v<1000)return v+' ms';const s=v/1000;return s<60?s.toFixed(1)+' s':s<3600?Math.floor(s/60)+' min '+Math.round(s%60)+' s':Math.floor(s/3600)+' h '+Math.floor(s%3600/60)+' min'}
 function chip(t,k){return '<span class="chip '+k+'">'+t+'</span>'}
-function build(s){let h='';for(const[k,l,hint]of SETS){h+='<label><span>'+l+'<small>'+hint+'</small></span><input type="number" id="f_'+k+'" value="'+s[k]+'" onchange="c(\''+k+' \'+this.value)"></label>'}
+function build(s){let h='';for(const[k,l,hint]of SETS){h+='<label><span>'+l+(k==='line'||k==='dropmm'?'<small class="u" id="u_f_'+k+'"></small>':'')+'<small>'+hint+'</small></span><input type="number" id="f_'+k+'" value="'+s[k]+'" onchange="c(\''+k+' \'+this.value)"></label>'}
  document.getElementById('sets').innerHTML=h;built=1}
 function tick(){fetch('/api/status?since='+since).then(r=>r.json()).then(s=>{
  st=s;armed=!!s.armed;
@@ -336,7 +353,7 @@ function tick(){fetch('/api/status?since='+since).then(r=>r.json()).then(s=>{
  document.getElementById('drops').textContent=s.drops;
  document.getElementById('trig').textContent=s.trigger+(s.triggerAgo?' ('+ms(s.triggerAgo)+' ago)':'');
  document.getElementById('rw').textContent=s.lastRewind?(s.lastRewind+' steps of '+s.rewindSteps+(s.lastRewindLimit?', stopped by the switch':'')):'none yet';
- document.getElementById('meas').textContent=s.measuredDrop?('about '+s.measuredDrop+' mm (set '+s.settings.dropmm+')'):'not yet';
+ document.getElementById('meas').textContent=s.measuredDrop?('about '+ft(s.measuredDrop)+', set '+ft(s.settings.dropmm)):'not yet';
  document.getElementById('up').textContent=ms(s.uptime);
  document.getElementById('fw').textContent=s.fw||'-';
  document.getElementById('lsw').textContent=(s.limit?'closed':'open')+', closed '+s.limitCloses+' times since power-up';
@@ -348,14 +365,23 @@ function tick(){fetch('/api/status?since='+since).then(r=>r.json()).then(s=>{
  if(s.driverOn)h+=chip('motor powered','wa');
  if(s.fault)h+=chip(s.fault+(s.faultRun>1?' ('+s.faultRun+' in a row)':''),'no');
  document.getElementById('chips').innerHTML=h;
- if(s.log&&s.log.length){const L=document.getElementById('log');const atEnd=L.scrollTop+L.clientHeight>=L.scrollHeight-4;L.textContent+=s.log.join('\n')+'\n';if(atEnd)L.scrollTop=L.scrollHeight;
-  const fresh=s.log.filter(l=>!l.startsWith('> '));if(fresh.length){lastLine=fresh[fresh.length-1];if(rp.el&&performance.now()-rp.at<8000)showReply(rp.el,lastLine)}}
+ if(s.log&&s.log.length){const L=document.getElementById('log');const atEnd=L.scrollTop+L.clientHeight>=L.scrollHeight-4;L.textContent+=s.log.map(imp).join('\n')+'\n';
+  {const t=L.textContent.split('\n');if(t.length>400)L.textContent=t.slice(-300).join('\n')}if(atEnd)L.scrollTop=L.scrollHeight;
+  const fresh=s.log.filter(l=>!l.startsWith('> '));if(fresh.length){lastLine=imp(fresh[fresh.length-1]);if(rp.el&&performance.now()-rp.at<8000)showReply(rp.el,lastLine)}}
  since=s.next;
  if(!built)build(s.settings);
  for(const k in s.settings){const f=document.getElementById('f_'+k);if(!f||document.activeElement===f)continue;if(f.type==='checkbox')f.checked=!!s.settings[k];else f.value=s.settings[k]}
  const un=s.unsaved||[];for(const k in s.settings){const f=document.getElementById('f_'+k),l=f&&f.closest('label');if(!l)continue;l.classList.toggle('dirty',un.includes(k));l.classList.toggle('off',s.stock&&s.stock[k]!==undefined&&s.stock[k]!==s.settings[k])}
- document.getElementById('savebar').classList.toggle('on',un.length>0);
- if(un.length)document.getElementById('savetxt').textContent='Not saved (lost at a power cut): '+un.map(lbl).join(', ');
+ {const U={f_line:'mm',f_dropmm:'mm',f_firecm:'cm',f_clearcm:'cm',f_approach:'cms'};for(const id in U){const f=document.getElementById(id),u=document.getElementById('u_'+id);if(f&&u)u.textContent=f.value===''?'':(U[id]==='mm'?ft(f.value):U[id]==='cm'?fcm(f.value):fsp(f.value))}
+  const A=document.getElementById('rclose'),B=document.getElementById('rfar'),ur=document.getElementById('u_rrange');if(ur)ur.textContent=A.value!==''&&B.value!==''?fcm(A.value)+' to '+fcm(B.value):''}
+ {const now=performance.now();
+  if(pend){if(!un.length){lastSavedAt=now;lastSavedN=pend.length;doneTxt='SAVED on the board: '+(pend.length?pend.map(lbl).join(', '):'nothing had changed')+'. The board reports nothing unsaved; a power cut keeps them.';doneUntil=now+7000;
+    for(const k of pend){const f=document.getElementById('f_'+k),l=f&&f.closest('label');if(l){l.classList.add('saved');setTimeout(()=>l.classList.remove('saved'),7000)}}pend=null}
+   else if(now-pendAt>4000){doneTxt='NOT SAVED: the board still reports '+un.map(lbl).join(', ')+' unsaved. Press Save settings again.';doneUntil=now+10000;pend=null}}
+  const sb=document.getElementById('savebar'),showDone=doneUntil>now;sb.classList.toggle('on',un.length>0||showDone);sb.classList.toggle('done',showDone&&!un.length);
+  document.getElementById('savetxt').textContent=showDone?doneTxt:un.length?'Not saved (lost at a power cut): '+un.map(lbl).join(', '):'';
+  const sr=document.getElementById('savedrow');sr.className=un.length?'wa':'';
+  sr.textContent=un.length?un.length+' value'+(un.length>1?'s':'')+' changed and not yet saved: '+un.map(lbl).join(', '):'All settings are saved on the board'+(lastSavedAt?' (last save from this page '+ms(Math.round(now-lastSavedAt))+' ago, '+lastSavedN+' value'+(lastSavedN===1?'':'s')+')':'')}
  const bar=document.getElementById('bar');bar.className=s.fault?'no':s.busy?'wa':(s.state==='ready'&&armed)?'ok':'';
  document.getElementById('bstate').textContent=s.state+(s.state==='ready'?(armed?', armed':', not armed'):'');document.getElementById('blog').textContent=lastLine;
  if(s.cyc!==cycSeq){cycSeq=s.cyc;cycles()}
@@ -367,7 +393,7 @@ function cycles(){fetch('/api/cycles').then(r=>r.json()).then(d=>{
  let h='',n=[0,0,0,0,0];
  for(const x of d.cycles){if(x.boot===d.boot)n[x.end]++;const ago=x.boot===d.boot?ms(Math.max(0,d.uptime-x.up)*1000)+' ago':'before a power cut';
   const what=x.kind?K[x.kind]:'drop '+x.n+', fired by '+x.trig;
-  const det=x.kind?ago:x.told+' mm told'+(x.meas?', '+x.meas+' mm back':'')+(x.land?', '+(x.land/1000).toFixed(2)+' s to land':'')+'; '+ago;
+  const det=x.kind?ago:ft(x.told)+' told'+(x.meas?', '+ft(x.meas)+' back':'')+(x.land?', '+(x.land/1000).toFixed(2)+' s to land':'')+'; '+ago;
   h+='<div class="row"><span>'+what+'<small>'+det+'</small></span>'+chip(E[x.end]||'?',C[x.end]||'wa')+'</div>'}
  document.getElementById('cyc').innerHTML=h||'<div class="sub">none yet</div>';
  document.getElementById('cycsum').textContent=d.cycles.length?'This power-up: '+n[0]+' home first try, '+n[1]+' on the retry, '+n[2]+' count only, '+(n[3]+n[4])+' stopped.':''}).catch(()=>{})}
@@ -381,9 +407,9 @@ document.querySelectorAll('.card>h2').forEach(h=>{const card=h.parentElement,nam
 tick();setInterval(tick,800);
 
 // ---- radar view: /api/radar about 8 times a second, drawn every animation frame
-let rz=6,rfrozen=false,rbusy=false,rlast=null,lastFrames=-1,lastCloses=-1;
+let rz=20,rfrozen=false,rbusy=false,rlast=null,lastFrames=-1,lastCloses=-1;   // rz = feet across the strip
 let ripples=[],hist=[],mtrail=[];
-function rzoomT(){rz=rz===6?3:6;document.getElementById('rzoom').textContent=rz===6?'Show 3 m':'Show 6 m'}
+function rzoomT(){rz=rz===20?10:20;document.getElementById('rzoom').textContent=rz===20?'Show 10 ft':'Show 20 ft'}
 function rpauseT(){rfrozen=!rfrozen;document.getElementById('rpause').textContent=rfrozen?'Live':'Freeze'}
 function fit(cv,ratio){const d=devicePixelRatio||1,w=cv.clientWidth,h=Math.round(w*ratio);
  if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d);cv.style.height=h+'px'}
@@ -402,21 +428,21 @@ function rpoll(){if(document.hidden||rbusy||rfrozen)return;rbusy=true;
 function rtable(d){const r=d.r;let h='';
  if(r.talking){
   const mv=r.state===2||r.state===3,stl=r.state===1||r.state===3;
-  if(mv)h+='<div class="row"><span><span class="key" style="background:#4ac47a"></span>Moving person</span><b>'+(r.mdist/100).toFixed(2)+' m away, '+Math.abs(r.speed)+' cm/s, '+dirName(r.dir,d.inv)+(r.eta?', arrives in '+(r.eta/1000).toFixed(2)+' s':'')+'</b></div>'
-   +'<div class="row"><span>&nbsp;&nbsp;sensor confidence '+r.menergy+' of 99, raw speed '+r.speed+' cm/s, raw direction word '+r.rawdir+'</span><span></span></div>';
-  if(stl||(mv&&r.pdist>0))h+='<div class="row"><span><span class="key" style="background:#a995ff"></span>Still person</span><b>'+(r.pdist/100).toFixed(2)+' m away, confidence '+r.penergy+' of 99</b></div>';
+  if(mv)h+='<div class="row"><span><span class="key" style="background:#4ac47a"></span>Moving person</span><b>'+fcm(r.mdist)+' away, '+fsp(Math.abs(r.speed))+', '+dirName(r.dir,d.inv)+(r.eta?', arrives in '+(r.eta/1000).toFixed(2)+' s':'')+'</b></div>'
+   +'<div class="row"><span>&nbsp;&nbsp;sensor confidence '+r.menergy+' of 99, raw speed '+fsp(r.speed)+', raw direction word '+r.rawdir+'</span><span></span></div>';
+  if(stl||(mv&&r.pdist>0))h+='<div class="row"><span><span class="key" style="background:#a995ff"></span>Still person</span><b>'+fcm(r.pdist)+' away, confidence '+r.penergy+' of 99</b></div>';
   if(r.state===0)h+='<div class="row"><span>Nobody in view</span><b>-</b></div>';
   h+='<div class="row"><span>Trigger rule</span><b>'+(r.fire?'passes':'not met')+(r.run>=2?' (two in a row: fires)':r.run===1?' (one reading)':'')+'</b></div>';
-  const ccm=st?st.settings.clearcm:300;h+='<div class="row"><span>Doorway</span><b>'+(r.clear?'clear (nobody within '+ccm+' cm)':'someone within '+ccm+' cm')+'</b></div>';
+  const ccm=st?st.settings.clearcm:300;h+='<div class="row"><span>Doorway</span><b>'+(r.clear?'clear (nobody within '+fcm(ccm)+')':'someone within '+fcm(ccm))+'</b></div>';
   h+='<div class="row"><span>Light at the sensor</span><b>'+r.light+' lux</b></div>'}
- h+='<div class="row"><span>Last drop fired by the sensor</span><b>'+(r.why?r.why+', '+ms(r.whyAgo)+' ago':'none since power-up')+'</b></div>';
+ h+='<div class="row"><span>Last drop fired by the sensor</span><b>'+(r.why?imp(r.why)+', '+ms(r.whyAgo)+' ago':'none since power-up')+'</b></div>';
  h+='<div class="row"><span>OUT pin (GPIO33)</span><b>'+(d.out?'high, someone there':'low, clear')+'</b></div>';
  if(r.ver)h+='<div class="row"><span>Sensor software</span><b>'+r.ver+'</b></div>';
  document.getElementById('rtab').innerHTML=h;
  const sn=['low','mid','high','custom'];for(const[id,v]of[['rres',r.res<0?'':(r.res?'20':'80')],['rsensm',r.sensm<0?'':sn[r.sensm]||''],['rsensp',r.sensp<0?'':sn[r.sensp]||''],['rdelay',r.delay<0?'':r.delay]]){const f=document.getElementById(id);if(f&&document.activeElement!==f&&v!=='')f.value=v}
  if(st){const land=st.landMs||0,fc=st.settings.firecm||0,v=(r.talking&&(r.state===2||r.state===3)&&r.dir===2)?Math.abs(r.speed):0;let t='';
-  if(land&&fc){t='The spider takes '+(land/1000).toFixed(2)+' s from the trigger to the bottom. Firing at '+fc+' cm: someone walking at 100 cm/s is about '+Math.max(0,Math.round(fc-100*land/1000))+' cm from the sensor when it lands'+(v?', at the '+v+' cm/s seen now about '+Math.max(0,Math.round(fc-v*land/1000))+' cm':'')+'. Raise the fire distance if that is past the doorway.'}
-  else if(fc)t='Fire distance '+fc+' cm. After the first drop this line says where the person is when the spider lands.';
+  if(land&&fc){t='The spider takes '+(land/1000).toFixed(2)+' s from the trigger to the bottom. Firing at '+fcm(fc)+': someone walking at '+fsp(100)+' is about '+fcm(Math.max(0,Math.round(fc-100*land/1000)))+' from the sensor when it lands'+(v?', at the '+fsp(v)+' seen now about '+fcm(Math.max(0,Math.round(fc-v*land/1000))):'')+'. Raise the fire distance if that is past the doorway.'}
+  else if(fc)t='Fire distance '+fcm(fc)+'. After the first drop this line says where the person is when the spider lands.';
   document.getElementById('rcheck').textContent=t}
  if(r.farthest){for(const[id,v]of[['rclose',r.closest],['rfar',r.farthest]]){const f=document.getElementById(id);if(document.activeElement!==f&&!f.dataset.touched)f.value=v}}
  let c=r.talking?chip('radar talking, '+r.fps.toFixed(1)+' frames/s','ok'):chip(r.frames?'radar silent '+ms(r.age)+', OUT pin carries the trigger':'no radar frames yet','no');
@@ -431,7 +457,7 @@ function rtable(d){const r=d.r;let h='';
   :'Frames '+r.frames+', bad '+r.bad+', bytes '+r.bytes+', '+r.layout+' data bytes per frame'+(r.layout!==18?' (18 expected: the readings may be wrong, console: radar raw)':'')+'.'}
 function rdraw(){requestAnimationFrame(rdraw);if(document.hidden)return;
  const cv=document.getElementById('scope');if(!cv.clientWidth)return;const[x,w,h]=fit(cv,.3);const now=performance.now();
- const L=40,R=w-16,y0=h*0.55,k=(R-L)/(rz*100);const X=cm=>L+cm*k;
+ const L=40,R=w-16,y0=h*0.55,k=(R-L)/(rz*30.48);const X=cm=>L+cm*k;
  x.clearRect(0,0,w,h);
  const r=rlast&&rlast.r.talking?rlast.r:null,ap=st?st.settings.approach:30,lead=st?st.settings.leadms:750,fcm=st?st.settings.firecm||0:0;
  const sp=r&&(r.state===2||r.state===3)&&r.dir===2?Math.max(Math.abs(r.speed),ap):ap;const zone=Math.max(sp*lead/1000,fcm);
@@ -439,17 +465,17 @@ function rdraw(){requestAnimationFrame(rdraw);if(document.hidden)return;
  const ccm=st?st.settings.clearcm:300;x.fillStyle='rgba(232,180,74,.10)';x.fillRect(X(ccm),y0-18,Math.max(0,R-X(ccm)),36);
  x.strokeStyle='#332e3d';x.font='11px system-ui';x.fillStyle='#9a93a8';
  x.beginPath();x.moveTo(L,y0);x.lineTo(R,y0);x.stroke();
- for(let m=0;m<=rz;m++){const px=X(m*100);x.beginPath();x.moveTo(px,y0-22);x.lineTo(px,y0+22);x.stroke();x.fillText(m+' m',px-8,h-4)}
- x.fillText('fires here at '+sp+' cm/s',X(0)+4,y0-26);if(ccm<rz*100)x.fillText('clear past '+ccm+' cm',X(ccm)+4,y0-26);
- if(r&&r.farthest){x.strokeStyle='#e8b44a';x.setLineDash([3,3]);for(const cm of[r.closest,r.farthest]){if(cm<=rz*100){x.beginPath();x.moveTo(X(cm),y0-20);x.lineTo(X(cm),y0+20);x.stroke()}}x.setLineDash([])}
+ for(let f=0;f<=rz;f+=2){const px=X(f*30.48);x.beginPath();x.moveTo(px,y0-22);x.lineTo(px,y0+22);x.stroke();x.fillText(f+" ft",px-8,h-4)}
+ x.fillText('fires here at '+fsp(sp),X(0)+4,y0-26);if(ccm<rz*30.48)x.fillText('clear past '+fcm(ccm),X(ccm)+4,y0-26);
+ if(r&&r.farthest){x.strokeStyle='#e8b44a';x.setLineDash([3,3]);for(const cm of[r.closest,r.farthest]){if(cm<=rz*30.48){x.beginPath();x.moveTo(X(cm),y0-20);x.lineTo(X(cm),y0+20);x.stroke()}}x.setLineDash([])}
  ripples=ripples.filter(t=>now-t<900);
  for(const t of ripples){const f=(now-t)/900;x.strokeStyle='rgba(169,149,255,'+(.4*(1-f)).toFixed(3)+')';x.beginPath();x.arc(L,y0,Math.max(1,f*(R-L)),-Math.PI/2,Math.PI/2);x.stroke()}
  x.fillStyle='#7a5cff';x.fillRect(L-6,y0-14,6,28);x.fillStyle='#9a93a8';x.fillText('sensor',4,y0-18);
  if(mtrail.length){x.strokeStyle='#4ac47a';x.lineWidth=2;for(let j=1;j<mtrail.length;j++){x.globalAlpha=Math.max(0,1-(now-mtrail[j].t)/4000)*.8;x.beginPath();x.moveTo(X(mtrail[j-1].d),y0-6);x.lineTo(X(mtrail[j].d),y0-6);x.stroke()}x.globalAlpha=1;x.lineWidth=1}
  if(r){if((r.state===2||r.state===3)&&r.mdist>0){const px=X(r.mdist);x.fillStyle=r.run>=2?'#e2604f':'#4ac47a';x.beginPath();x.arc(px,y0-6,7,0,Math.PI*2);x.fill();
    if(r.dir!==1){x.strokeStyle=x.fillStyle;x.lineWidth=2;x.beginPath();x.moveTo(px,y0-6);x.lineTo(px+(r.dir===2?-16:16),y0-6);x.stroke();x.lineWidth=1}
-   x.fillStyle='#ece9f2';x.font='600 12px system-ui';x.fillText((r.mdist/100).toFixed(1)+' m, '+Math.abs(r.speed)+' cm/s '+dirName(r.dir),Math.min(px+12,R-150),y0-40)}
-  if(r.pdist>0&&r.state>0){const px=X(r.pdist);x.fillStyle='#a995ff';x.beginPath();x.arc(px,y0+8,6,0,Math.PI*2);x.fill();x.fillStyle='#ece9f2';x.font='12px system-ui';x.fillText('still '+(r.pdist/100).toFixed(1)+' m',Math.min(px+10,R-70),y0+30)}}
+   x.fillStyle='#ece9f2';x.font='600 12px system-ui';x.fillText(fcm(r.mdist)+', '+fsp(Math.abs(r.speed))+' '+dirName(r.dir),Math.min(px+12,R-300),y0-40)}
+  if(r.pdist>0&&r.state>0){const px=X(r.pdist);x.fillStyle='#a995ff';x.beginPath();x.arc(px,y0+8,6,0,Math.PI*2);x.fill();x.fillStyle='#ece9f2';x.font='12px system-ui';x.fillText('still '+fcm(r.pdist),Math.min(px+10,R-130),y0+30)}}
  if(!rlast||!rlast.r.talking){x.fillStyle='rgba(11,10,14,.72)';x.fillRect(0,0,w,h);x.fillStyle='#e2604f';x.font='600 15px system-ui';x.textAlign='center';
   x.fillText(!rlast?'waiting for the board':rlast.r.frames?'radar silent':'no radar frames yet',w/2,h/2);x.textAlign='left'}
  if(rfrozen){x.fillStyle='#e8b44a';x.font='600 12px system-ui';x.fillText('FROZEN',8,16)}

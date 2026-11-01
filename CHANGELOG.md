@@ -2,6 +2,14 @@
 
 Finished work, newest first, one plain line each. Shape from Keep a Changelog (keepachangelog.com). Work still to do is in `ROADMAP.md`; the full detail of any line is in the git history for that date.
 
+## 2026-10-31
+
+### Changed
+- Page (flash `fw-16+3`, on the board 14:00): Save settings is confirmed by the board. The Save bar turns green for 7 s naming the values the board now holds, once the board's status reports nothing unsaved (NOT SAVED in amber if it still does after 4 s); each saved field gets a green edge; a line above the Settings list says all settings are saved on the board and when this page last saved. Leo's card buttons that save by themselves show the same green bar.
+- Page: every length reads feet and inches with metres in brackets, `4' 2" (1.26m)`: Leo's card, the status rows, Last cycles, the radar rows and strip (10 or 20 ft across, 2 ft ticks), the sensor's range step, and the board's own log lines as they land in the Console card and the reply strips. Speeds read ft/s (m/s). The number boxes keep the board's unit (mm or cm) with a purple readout beside each. Leo's drop buttons step 4 inches (102 mm) instead of 10 cm.
+- Line length on the board was raised from 1333 to 1536 mm at 14:00 so the page would allow a drop 8 inches longer (owner's ask). WRONG: `line` is the thread's real length, and a drop past it runs the spider into the barrel knot; that night the owner heard a clicking, grinding noise at the drop and the spider ended up not home. Owner at 00:30 on 2026-11-01: "revert most recent relevant changes". The board was off its plug schedule and did not answer with the plug on, so the revert (`line 1333`, `save`) is OWED at the next power-up. Leo's "longer" button now says a longer drop needs a longer thread tied on, then Set drop length here.
+- Fewer log lines per cycle (owner: "less long series of log lines"): the driver waking for an approach no longer writes a line, and `[cycle] done` and `[done] drop` are one line, `[done] drop, lockout N ms`. The Console card keeps its last 300 lines. The switch edges, the unload cut short and the driver reset were silenced in the 14:00 flash and are back in the next one: the rewind problem that night needs them in the log.
+
 ## 2026-10-30
 
 ### Changed
