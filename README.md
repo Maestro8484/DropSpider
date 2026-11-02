@@ -46,7 +46,7 @@ The full list with the "only if" rows is [docs/parts.md](docs/parts.md). Both co
 <!-- parts:start -->
 As an Amazon Associate I earn from qualifying purchases. The Amazon links below carry my tag; the price is the same for you.
 
-Parts, if you own none of it: about $110 (today's Amazon prices, 10 items; the printer, filament, a 12 V adapter and screws you may already have).
+Parts, if you own none of it: about $99 (today's Amazon prices, 10 items; the printer, filament, a 12 V adapter and screws you may already have).
 
 | Part | Qty | Where | Note | Price |
 |---|---|---|---|---|
@@ -64,7 +64,7 @@ Parts, if you own none of it: about $110 (today's Amazon prices, 10 items; the p
 | NEMA 11 stepper 28 mm bipolar 6.5Ncm 0.8A 5 mm shaft (Iverntech 28HD1411-02; mine is the STEPPERONLINE 11HS12-0674S; its listing is gone) | 1 | [Amazon](https://www.amazon.com/dp/B07PNV7RBW?tag=maestro8484-20) | set the driver to 0.85 V before it moves (build guide, section 07) | $15.99 |
 | BIGTREETECH TMC2209 V1.3 stepstick | 1 | [Amazon](https://www.amazon.com/dp/B07ZPV4HFP?tag=maestro8484-20) | the stepper driver | $9.99 |
 | A4988/DRV8825 stepper driver expansion board (2 pk) | 1 | [Amazon](https://www.amazon.com/dp/B0FQC39GJ2?tag=maestro8484-20) | the driver plugs into this; it has the screw terminal for 12 V | $7.99 |
-| SG90 micro servo | 1 | [Amazon](https://www.amazon.com/dp/B072V529YD?tag=maestro8484-20) | swings the finger that locks the spool; an MG90 works too | $19.99 |
+| SG90 micro servo (Miuzei 3 pk) | 1 | [Amazon](https://www.amazon.com/dp/B0FJQZSFMS?tag=maestro8484-20) | swings the finger that locks the spool; an MG90 works too | $8.88 |
 | uxcell 5 to 6 mm rigid coupler L20 D12 | 1 | [Amazon](https://www.amazon.com/dp/B07P5Z25H8?tag=maestro8484-20) | joins the motor shaft to the rod; blue threadlocker on the set screws | $7.79 |
 | 6 mm x 100 mm hardened chrome rod | 1 | [Amazon](https://www.amazon.com/dp/B0D2BK3X8P?tag=maestro8484-20) | the axle everything rides on | $7.09 |
 | HF0612 one-way needle bearing | 1 | [Amazon](https://www.amazon.com/dp/B0BKY2ZSTR?tag=maestro8484-20) | the one-way clutch inside the spool; comes as a 5 pack; which way round it goes in matters (doc 05, step 1) | $6.79 |
