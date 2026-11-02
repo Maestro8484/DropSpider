@@ -29,7 +29,7 @@
 
 ## Build one
 
-Everything below is in the build guide, `docs/build_guide/build_guide.html`: one page with pictures, wiring to arming. On GitHub it shows as code, so click it, press the download button, and open the file in your browser. A web address for it is coming.
+Everything below is in the [build guide](https://maestro8484.github.io/DropSpider/build_guide/build_guide.html): one page with pictures, wiring to arming. (The same file is `docs/build_guide/build_guide.html` here; GitHub shows that one as code.)
 
 1. Print the parts: the print list in [05_assembly.md](docs/05_assembly.md), section A.
 2. Buy what's in the parts table below (guide, section 01).
@@ -93,7 +93,7 @@ Parts, if you own none of it: about $94 (today's Amazon prices, 9 items; the pri
 
 | Open this | For |
 |---|---|
-| `docs/build_guide/build_guide.html` | **start here to build one.** One page, wiring to arming, with pictures |
+| `docs/build_guide/build_guide.html` | **start here to build one.** One page, wiring to arming, with pictures. Opens as a web page at https://maestro8484.github.io/DropSpider/build_guide/build_guide.html |
 | `docs/parts.md` | every part with a link, and what it's for |
 | `docs/05_assembly.md` | the print list (section A), then assembly step by step with pictures |
 | `docs/06_installation.md` | the porch: heights, the braces, the line length, safety |
