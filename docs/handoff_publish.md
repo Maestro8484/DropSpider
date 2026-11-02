@@ -36,7 +36,7 @@ Build `tools/make_parts.py`: reads `bom/BOM.csv`, writes `docs/parts.md` (and th
 
 Prices: the script does not fetch Amazon (their pages block scripts and prices move). The README gives one honest total as a range the owner confirms ("about $X to $Y in parts if you have none of it; the printer, filament and a 12 V adapter you may already own"). The figure comes from `docs/handoff_amazon_prices.md` (roadmap 8d: an Opus session reads his Amazon orders and today's prices into the BOM and writes the total here). If that row is still open when this session runs, the owner said on 2026-11-02 he will give the total "at time of photos": ask in one line when the photos land, and until then the README says "parts total coming"; never invent one.
 
-Parts total (filled by the prices session): not yet.
+Parts total (filled by the prices session, 2026-11-02, summed from `bom/BOM.csv` column `price_now_usd`): parts, if you own none of it: about $94 (today's Amazon prices, 9 items; the printer, filament, a 12 V adapter and screws you may already have). Counted: status `have` or `TO BUY` with an Amazon price, spares (notes starting "spare", the LM2596) left out. Not in that figure: the motor (row M1), whose listing is currently unavailable; a replacement listing is owed before the README carries the total, so add it once the BOM has one.
 
 ### 3. Photos and video: one folder, one .bat, the README fills itself
 
