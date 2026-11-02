@@ -2,6 +2,11 @@
 
 Finished work, newest first, one plain line each. Shape from Keep a Changelog (keepachangelog.com). Work still to do is in `ROADMAP.md`; the full detail of any line is in the git history for that date.
 
+## 2026-11-01
+
+### Added
+- `measure` and the page button Measure the thread (Bench: motor card), REPO-ONLY, built, not flashed (the board is off): the board finds the thread's own length. Finger out, the whole thread let out at 80 rpm (up to 3000 mm; the spider ends up hanging on the barrel knot), 1 s settle, then wound all the way up to the switch counting the steps; the count plus the 40 mm between spool and eyelet is saved as `line`. The drop length is kept if it still fits the new line, else set to the longest the thread allows, and the log says which. Nobody types `line` from a guess any more (the 2026-10-31 mistake). Doc 07 step 11 uses it, and a new section A new thread (N1 to N4) is the procedure for first setup and every re-thread. Last cycles shows a `measure the thread` row.
+
 ## 2026-10-31
 
 ### Changed

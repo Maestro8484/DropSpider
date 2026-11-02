@@ -20,14 +20,27 @@ Step numbers 1 to 14 are unchanged from Rev C so the open-items table still poin
 | 8 | `rewind` | Spool winds the line up. If the motor turns but the spool does not (clutch slipping): `off`, `dir 0` (or 1) and repeat. If neither direction winds, the HF0612 is in the Rev C direction: flip it (05 step 3) |
 | 9 | Watch the end of `rewind` | With the switch on: the stopper lifts the fairlead flap, the switch clicks, the motor stops at once, no buzz; console says "stopped by the limit switch". With the switch off: the flap bottoms on the fairlead, motor buzzes briefly (skipping), then stops |
 | 10 | `lock` | Finger goes in, motor eases the spool down onto a tooth, motor goes off, spider drops no more than about 13 mm and stays. The flap drops back and the switch reads open: correct by design (doc 09, V14) |
-| 11 | `line <measured mm>`, `save`, then `drop` five times | All five complete, no tangles, finger always relocks. With the switch on, "Line length measured by the switch" on the page is within about 40 mm of `line` |
+| 11 | `measure` (page: Measure the thread, Bench: motor card), then `drop` five times | `measure`: the thread goes all the way out slowly, winds all the way back up, the switch clicks, and the log says `line length N mm (was M), saved` and what the drop length is now. All five drops complete, no tangles, finger always relocks. With the switch on, "Line length measured by the switch" on the page is within about 40 mm of `line` |
 | 12 | `arm`, `save`. Walk toward the door from 3 m away, then walk away, then walk across the hallway | Fires only when walking toward the door, spider arriving as you reach the doorway. Radar tests S1 to S5 in `handoff_sensor_bearings.md` |
 | 13 | Stand still in front of it after a scare | No second scare until you leave and 20 s pass |
 | 14 | Hardware check after 20 cycles | Coupler set screws tight, no white stress marks on the finger or ledge, knot intact, flap swings freely on its pin, switch roller not bent, no groove worn in the fairlead bore |
 
 Bench motion commands disarm the radar on purpose. Step 12 re-arms it.
 
-Then mount per `06_installation.md` and repeat steps 11 to 13 in place, adjusting `line` for the resting height.
+Then mount per `06_installation.md` and repeat steps 11 to 13 in place, adjusting the drop length (Leo's card, 4" shorter and 4" longer) for the resting height.
+
+## A new thread
+
+Every time a thread is tied on, and at first setup. The board measures the thread; nobody types `line`. The thread is the bonded nylon upholstery thread of doc 01 (size 69, 210D/3, Tex 70, about 11 lb).
+
+| # | Do | Pass |
+|---|---|---|
+| N1 | Cut about 7 ft (2.1 m): liberal, the board measures what is there and the drop is set from the page. Tie it at the barrel (doc 01 knots), through the fairlead, stopper on, swivel and spider on | Knot intact, stopper below the flap, spider hanging |
+| N2 | Hang the spider so it can reach full length without touching the floor (on the porch: in place; on the bench: over a stair rail or a table edge high enough for the thread) | Spider swings free at full length |
+| N3 | Page, Bench: motor card, Measure the thread (or `measure`). Read the Console card | Finger out; the thread pays out slowly until the spider hangs on the knot and the motor runs on free; 1 s; the thread winds all the way back; the switch clicks; lock. Log: `[measure] ... line length N mm (was M), saved` and either `drop length kept at ...` or `drop length set to ..., the longest this thread allows`. Last cycles shows a `measure the thread` row |
+| N4 | Leo's card: 4" shorter or 4" longer until the drop length reads right for the porch, then TEST DROP | The spider stops where it should, short of the thread's end, and comes home on the switch |
+
+If the log says `only N mm wound ... nothing changed`, the thread never went out (the spider was held, or the thread snagged): free it and run it again. If it says `the switch never closed`, the stopper missed the flap: Bring it home, check the stopper, run it again.
 
 ## If something fails
 

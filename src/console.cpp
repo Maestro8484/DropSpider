@@ -106,6 +106,7 @@ static const char *const HELP[] = {
   "  lock            finger in, seat move onto a tooth, then driver off",
   "  rewind          rewind (finger out first); at the limit switch it eases off 1/8 turn and locks",
   "  teach           spider hanging where a drop should stop: wind up to the switch, count it, save it as dropmm (page: Set drop length here)",
+  "  measure         let the whole thread out slowly, wind it all up to the switch, count it, save it as line; the drop length is kept if it fits (page: Measure the thread)",
   "  rehome          bring it home from anywhere: lower 1/2 turn, wind slowly to the switch, clear the fault, re-arm (same as 3 fast presses of the switch; 5 presses within 4 s = sleep or wake)",
   "  lastlog         the log lines up to the last fault, kept through a power cut",
   "  jog <steps>     signed microsteps, 1600 = one turn, + = rewind direction; finger out first; driver stays on",
@@ -191,6 +192,7 @@ void consoleRun(const String &raw, String *capture) {
   else if (cmd == "lock")     motion(ACT_LOCK, 0, src);
   else if (cmd == "rewind")   motion(ACT_REWIND, 0, src);
   else if (cmd == "teach")    motion(ACT_TEACH, 0, src);
+  else if (cmd == "measure")  motion(ACT_MEASURE, 0, src);
   else if (cmd == "rehome")   motion(ACT_REHOME, 0, src);
   else if (cmd == "lastlog")  printLastLog();
   else if (cmd == "stop")     motion(ACT_STOP, 0, src);

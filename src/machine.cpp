@@ -153,6 +153,10 @@ long rewindSteps() {
 }
 
 static float mmPerStep() { return PI * BARREL_DIA_MM / STEPS_PER_TURN; }
+// The wind (and the let-out before it) of a measure: the longest line the setting allows.
+static long longestLineSteps() {
+  return (long)(((LINE_MAX_MM - SPOOL_TO_EYELET_MM) / (PI * BARREL_DIA_MM) + OVERSHOOT_TURNS) * STEPS_PER_TURN);
+}
 
 static void applyDir();
 
@@ -205,6 +209,10 @@ static bool homeKnown() { return !S.limitFitted || limitHome() || homeFlag; }
 // and that count becomes the drop distance.
 static bool teaching = false;
 static int teachWasArmed = 0;
+// Measure (owner 2026-11-01): the whole thread let out slowly, then wound all the way up
+// to the switch counting the steps; that count plus the spool-to-eyelet length becomes
+// `line`. Runs as a teach (same flag, same abort paths) with measureLine set.
+static bool measureLine = false;
 // Rehome (owner 2026-10-13, 3 presses of the switch): from anywhere, lower 1/2 turn
 // so the stopper is surely below the flap, then wind slowly to the switch.
 static bool rehoming = false;
@@ -461,6 +469,7 @@ static void startRewind(int rpm = 0) {
   // After a powered drop the spool is down only as far as the drop went, so wind
   // that plus the usual overshoot. The switch or the bead stop ends it first.
   long n = rewindSteps();
+  if (teaching && measureLine) { n = longestLineSteps(); rpm = FEED_RPM; }   // the thread's length is what is being found
   if (cycle && lastDropSteps > 0) {
     n = min(n, lastDropSteps + (long)(OVERSHOOT_TURNS * STEPS_PER_TURN));
     slowAt = max(0L, n - (long)(FEED_ZONE_TURNS * STEPS_PER_TURN));   // fast most of the way, slow onto the switch
@@ -533,9 +542,11 @@ static bool finishRewind() {
 // The teach wind reached the switch: what it ran, plus the unload before it, is the
 // line from where the spider hung to the top. That becomes the drop distance (and the
 // line length grows if the drop would not fit). Armed goes back to what it was.
+static void finishMeasure();
 static void finishTeach() {
   teaching = false;
   S.armed = teachWasArmed;
+  if (measureLine) { finishMeasure(); return; }
   long r = unloadRan + lastRewind;
   int mm = (int)lround(r * mmPerStep());
   int was = S.dropMm;
@@ -556,6 +567,36 @@ static void finishTeach() {
   benchReturn = ST_WAIT_CLEAR;
   logf("[teach] wound %ld steps (%.2f turns, %d mm) from where the spider hung up to the switch: "
        "drop distance set to %d mm (was %d) and saved", r, r / (float)STEPS_PER_TURN, (int)lround(r * mmPerStep()), mm, was);
+}
+
+// The measure wind reached the switch: what it wound from the end of the thread, plus
+// the thread that stays between spool and eyelet when up, is the whole line. The unload
+// ran before the let-out, so it is not part of it. The drop length is kept if it still
+// fits the measured line, else set to the longest the line allows.
+static void finishMeasure() {
+  measureLine = false;
+  long r = lastRewind;
+  int wound = (int)lround(r * mmPerStep());
+  if (wound < 200) {
+    logf("[measure] only %d mm wound up to the switch: the thread was not let out, nothing changed. Line length kept at %d mm", wound, S.lineMm);
+    return;
+  }
+  int lineNew = min(wound + (int)SPOOL_TO_EYELET_MM, (int)LINE_MAX_MM);
+  int lineWas = S.lineMm, dropWas = S.dropMm;
+  int dropMax = lineNew - (int)SPOOL_TO_EYELET_MM - DROP_KNOT_MARGIN_MM;
+  int dropNew = dropWas <= dropMax ? dropWas : dropMax;
+  String why;
+  bool ok = lineNew >= lineWas
+    ? settingsSet("line", String(lineNew), why) && settingsSet("dropmm", String(dropNew), why)
+    : settingsSet("dropmm", String(dropNew), why) && settingsSet("line", String(lineNew), why);
+  if (!ok) { logf("[measure] not saved: %s", why.c_str()); return; }
+  settingsSave();
+  fault = ""; faultRun = 0;
+  benchReturn = ST_WAIT_CLEAR;
+  logf("[measure] wound %ld steps (%.2f turns, %d mm) from the end of the thread up to the switch: line length %d mm (was %d), saved",
+       r, r / (float)STEPS_PER_TURN, wound, lineNew, lineWas);
+  if (dropNew == dropWas) logf("[measure] drop length kept at %d mm; this thread allows up to %d mm (the longer button on Leo's card)", dropNew, dropMax);
+  else logf("[measure] drop length set to %d mm, the longest this thread allows (was %d)", dropNew, dropWas);
 }
 
 // The rehome wind reached the switch: home, fault cleared, armed as it was.
@@ -605,7 +646,7 @@ static void benchMove(Action a, long arg) {
     driverOn();
     homeLost();
     ignoreLimit = false;
-    if (!startMove(arg, S.rpm)) { logf("refused: motor would not start"); enter(benchReturn); return; }
+    if (!startMove(arg, teaching && measureLine ? FEED_RPM : S.rpm)) { logf("refused: motor would not start"); enter(benchReturn); return; }
     enter(ST_JOG);
   } else {
     startRewind();
@@ -666,7 +707,7 @@ static void handleReq(const Req &r) {
     haltMotor();
     bool wasCycle = cycle;
     if (isBusy()) homeLost();                 // stopped part way: nobody knows where the spider is
-    if (isBusy() && (wasCycle || teaching || rehoming)) recordCycle(wasCycle ? 0 : teaching ? 2 : 1, 4);
+    if (isBusy() && (wasCycle || teaching || rehoming)) recordCycle(wasCycle ? 0 : teaching ? (measureLine ? 3 : 2) : 1, 4);
     // A teach or rehome stopped part way is over: otherwise the next plain rewind
     // would finish it (and a stopped teach would set the drop length).
     if (teaching) { teaching = false; S.armed = teachWasArmed; }
@@ -707,7 +748,17 @@ static void handleReq(const Req &r) {
     benchMoveFingerOut(ACT_JOG, -RETRY_DOWN_STEPS);
     return;
   }
+  if (r.a == ACT_MEASURE) {
+    if (!S.limitFitted) { logf("[measure] needs the limit switch fitted (limit 1)"); return; }
+    teachWasArmed = S.armed;
+    teaching = true; measureLine = true;
+    unloadRan = 0;
+    logf("[measure] letting the whole thread out at %d rpm (up to %d mm), then winding it all up to the switch, counting", FEED_RPM, LINE_MAX_MM);
+    benchMoveFingerOut(ACT_JOG, -longestLineSteps());
+    return;
+  }
   if (r.a == ACT_TEACH) {
+    measureLine = false;
     if (!S.limitFitted) { logf("[teach] needs the limit switch fitted (limit 1)"); return; }
     if (limitHome() || homeFlag) {
       logf("[teach] the spider is already at the top. Lower it to where a drop should stop (page: -1 turn, -1/8), then press the switch 3 times");
@@ -915,10 +966,11 @@ static void step() {
       // and the bead clear of the flap. Owner rule 2026-10-06: the motor never loses
       // power before the finger is holding, and the spider never hangs on the motor
       // alone (it ran the whole line every time it did).
-      recKind = cycle ? 0 : rehoming ? 1 : teaching ? 2 : -1;
+      recKind = cycle ? 0 : rehoming ? 1 : teaching ? (measureLine ? 3 : 2) : -1;
       if (finishRewind()) {
         recEnding = 3;
-        if (teaching) { teaching = false; logf("[teach] the switch never closed, so nothing was measured; drop distance kept at %d mm", S.dropMm); }
+        if (teaching && measureLine) { teaching = false; measureLine = false; logf("[measure] the switch never closed in %d mm, so nothing was measured; line length kept at %d mm", LINE_MAX_MM, S.lineMm); }
+        else if (teaching) { teaching = false; logf("[teach] the switch never closed, so nothing was measured; drop distance kept at %d mm", S.dropMm); }
         if (rehoming) { rehoming = false; S.armed = rehomeWasArmed; logf("[rehome] the switch never closed: check the stopper meets the flap, and for a snag on the line"); }
         logf("[fault] full rewind without the switch: locking, then stopped. Send clear when it is fixed.");
         startLock("lock (stopped on a fault)", BACKOFF_STEPS);   // faultNow stays set: the lock ends in ST_FAULT
@@ -944,6 +996,7 @@ static void step() {
 
     case ST_RETRY_WAIT:
       if (inState() < (rewindRehomes ? REHOME_SETTLE_MS : RETRY_SETTLE_MS)) break;
+      if (teaching && measureLine) { startRewind(FEED_RPM); break; }
       if (!startMove(retryUpSteps, FEED_RPM)) logf("[rewind] %s would not start", rewindRehomes ? "whole-line wind" : "second try");
       enter(ST_REWIND);
       break;
@@ -995,6 +1048,7 @@ static void step() {
       logf("[jog] ran %ld steps%s", stepper->getCurrentPosition() - moveStartPos,
            cutByLimit ? ", stopped by the limit switch" : "");
       if (rehoming) { startRewind(FEED_RPM); break; }
+      if (teaching && measureLine) { logf("[measure] the thread is all out: settling, then winding it up to the switch"); enter(ST_RETRY_WAIT); break; }
       if (cutByLimit) { startLock("jog (stopped by the switch, finger in, seated, motor off)", BACKOFF_STEPS); break; }
       startLock("jog (finger in, seated, motor off)");
       break;

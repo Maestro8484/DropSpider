@@ -25,7 +25,7 @@ struct Row { const char *name; const char *key; int *ptr; long lo; long hi; int 
 static const Row ROWS[] = {
   { "setlock", "lock",   &S.servoLock,     0,    180,    DEF_SERVO_LOCK },
   { "setrel",  "rel",    &S.servoRel,      0,    180,    DEF_SERVO_REL },
-  { "line",    "line",   &S.lineMm,        100,  3000,   DEF_LINE_MM },
+  { "line",    "line",   &S.lineMm,        100,  LINE_MAX_MM, DEF_LINE_MM },
   { "rpm",     "rpm",    &S.rpm,           30,   600,    DEF_RPM },
   { "dir",     "dir",    &S.rewindDir,     0,    1,      DEF_REWIND_DIR },
   { "settle",  "settle", &S.settleMs,      0,    60000,  DEF_SETTLE_MS },

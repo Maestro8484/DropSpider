@@ -236,8 +236,9 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
   <button onclick="c('rewind')">Rewind</button><button onclick="c('lock')">Lock</button><button onclick="c('rel')">Release</button>
  </div>
  <div class="g">
-  <button onclick="teachAsk()">Set drop length here</button>
+  <button onclick="teachAsk()">Set drop length here</button><button onclick="measureAsk()">Measure the thread</button>
  </div>
+ <div class="sub">Measure the thread: after a new thread is tied on, or whenever the line length is in doubt. It lets the whole thread out slowly (the spider ends up hanging on the barrel knot), winds it all back up to the switch counting the turns, and saves that count as the line length. The drop length is kept if it still fits, otherwise set to the longest the thread allows. The spider must hang free at full length, not rest on the floor. About half a minute.</div>
  <div class="sub">Set drop length here: lower the spider with -1 turn and -1/8 to where a drop should stop, then press this. It winds up to the switch, counts the turns, and saves that as the drop distance. Bring it home (or the limit switch pressed 3 times fast by hand): from anywhere, lowers 1/2 turn, winds slowly to the switch, clears the fault and re-arms; the drop distance is not changed. The switch pressed 5 times within 4 s puts it to sleep (not armed, the radar ignored); 5 presses again, Arm, or a power cycle wakes it.</div>
  <div class="sub">+ is the rewind direction. A rewind locks by itself once it reaches the switch. The motor stays powered after a jog or release until Lock or Off. Release winds the spool up 1/12 turn while the finger swings out, then holds the spider on the motor.</div>
 </div>
@@ -278,7 +279,7 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 <script>
 const SETS=[
  ["setlock","Finger lock angle","degrees"],["setrel","Finger release angle","degrees"],
- ["line","Line length","typed in mm, barrel knot to stop bead, line straight not pulled"],["rpm","Rewind speed","rpm, 30 to 600"],
+ ["line","Line length","mm, barrel knot to stopper. Measure the thread (Bench: motor) sets it from the thread itself; type it only from a tape measure. It is the real thread: raising it does not add thread"],["rpm","Rewind speed","rpm, 30 to 600"],
  ["dir","Rewind direction","0 or 1, flip if the clutch just slips"],["settle","Hang at the bottom","ms before rewind"],
  ["rearm","Lockout after a scare","ms"],["limit","Limit switch fitted","1 = the switch stops the rewind"],
  ["liminv","Limit switch reads backwards","1 = flip it"],
@@ -326,7 +327,7 @@ function leo(v){if(!st)return;const fc=st.settings.firecm||0,fd=fireDist();
  if(fd<fc-20){lsay('The radar already fires the second it sees someone (at '+fcm(fd)+'). To be earlier: press Learn the empty yard, or tilt the radar a little toward the street. The fall itself takes about '+((st.landMs||2000)/1000).toFixed(1)+' s and cannot be shortened from here.')}
  else{const n=Math.min(500,fc+40);cs('firecm '+n);lsay('OK, earlier: it now fires at '+fcm(n)+' instead of '+fcm(fc)+'. Try another walk.')}}
 function leolen(d){if(!st)return;const max=st.settings.line-70,n=Math.max(100,Math.min(max,st.settings.dropmm+d));
- if(n===st.settings.dropmm)lsay(d>0?'That is as far as the thread allows ('+ft(max)+'). A longer drop needs a longer thread tied on first, then Set drop length here on the Bench: motor card. Raising Line length in Settings without a longer thread sends the spider into the barrel knot (2026-10-31).':'That is the shortest drop.');else{cs('dropmm '+n);lsay('Drop is now '+ft(n)+', saving. Press TEST DROP to see it.')}}
+ if(n===st.settings.dropmm)lsay(d>0?'That is as far as the thread allows ('+ft(max)+'). A longer drop needs a longer thread tied on first, then Measure the thread on the Bench: motor card. Raising Line length in Settings without a longer thread sends the spider into the barrel knot (2026-10-31).':'That is the shortest drop.');else{cs('dropmm '+n);lsay('Drop is now '+ft(n)+', saving. Press TEST DROP to see it.')}}
 function leoTick(s){const r=rlast&&rlast.r,fd=fireDist();
  const big=!s.settings.active?'OFF: deactivated (see the red banner)':s.fault?'STOPPED: '+s.fault:s.busy?(s.state.indexOf('rewind')>=0?'Winding back up':'DROPPING'):(s.armed?'Ready and watching':'Asleep (not armed)');
  document.getElementById('lstate').textContent=big;
@@ -334,6 +335,7 @@ function leoTick(s){const r=rlast&&rlast.r,fd=fireDist();
  document.getElementById('llen').textContent='Drops '+ft(s.settings.dropmm)+'. The line allows up to '+ft(s.settings.line-70)+'.';
  document.getElementById('larm').textContent=s.armed?'Disarm (go to sleep)':'Arm (wake up)';
  if(r&&r.calib>0)lsay('Learning the yard: '+r.calib+' s left, stay out of its view.')}
+function measureAsk(){if(!st)return;if(confirm('Measure the thread? It lets the whole thread out slowly, winds it all back up to the switch, counts the turns, and SAVES that as the line length (now '+ft(st.settings.line)+'). The drop length (now '+ft(st.settings.dropmm)+') is kept if it still fits. The spider must hang free at full length, not touch the floor. Start?'))c('measure')}
 function teachAsk(){if(!st)return;if(confirm('Set the drop length to where the spider hangs now? It winds up to the switch, counts the turns, and SAVES that count as the drop distance (now '+ft(st.settings.dropmm)+'). To bring it home without changing the drop distance, use Bring it home instead.'))c('teach')}
 function lbl(k){const f=document.getElementById('f_'+k);const s=f&&f.closest('label')&&f.closest('label').querySelector('span');return s&&s.firstChild?s.firstChild.textContent.trim():k}
 function rrange(){const A=document.getElementById('rclose'),B=document.getElementById('rfar');if(A.value===''||B.value==='')return;delete A.dataset.touched;delete B.dataset.touched;c('radar range '+A.value+' '+B.value)}
@@ -389,7 +391,7 @@ function tick(){fetch('/api/status?since='+since).then(r=>r.json()).then(s=>{
 }).catch(()=>{})}
 let lastLine='',cycSeq=-1;
 function cycles(){fetch('/api/cycles').then(r=>r.json()).then(d=>{
- const E=['home, switch first try','home on a slow retry','count only, no switch','stopped on a fault','stopped by hand'],C=['ok','wa','wa','no','no'],K=['drop','bring it home','set drop length'];
+ const E=['home, switch first try','home on a slow retry','count only, no switch','stopped on a fault','stopped by hand'],C=['ok','wa','wa','no','no'],K=['drop','bring it home','set drop length','measure the thread'];
  let h='',n=[0,0,0,0,0];
  for(const x of d.cycles){if(x.boot===d.boot)n[x.end]++;const ago=x.boot===d.boot?ms(Math.max(0,d.uptime-x.up)*1000)+' ago':'before a power cut';
   const what=x.kind?K[x.kind]:'drop '+x.n+', fired by '+x.trig;

@@ -131,7 +131,8 @@
 // ---------- DEFAULTS (runtime tunable, saved in flash) ----------
 #define DEF_SERVO_LOCK      90     // finger level, in the teeth, resting on the ledge
 #define DEF_SERVO_REL       30     // finger swung toward the floor, clear of the teeth
-#define DEF_LINE_MM         720    // barrel knot to stop bead, line straight not pulled. Measure yours.
+#define DEF_LINE_MM         720    // barrel knot to stop bead, line straight not pulled. `measure` sets it from the thread itself.
+#define LINE_MAX_MM         3000   // the longest `line` allowed; `measure` lets out and winds up to this much
 #define DEF_RPM             240    // rewind speed
 #define DEF_REWIND_DIR      1      // flip (0/1) if rewind turns the wrong way
 #define DEF_SETTLE_MS       1500   // hang time at the bottom before rewind
