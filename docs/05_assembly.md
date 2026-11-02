@@ -19,14 +19,16 @@ One list, in print order, for the inverted install (the device turned over on th
 | `finger.stl` | 1, plus a spare | flat top face down, hub standing up | 100% | none; 5 mm brim. PETG if you have it |
 | `fairlead_base.stl` | 1 | as exported, 17 mm tall | gyroid 40% | none; 5 mm brim |
 | `fairlead_flap_inv.stl` | 1, plus a spare | flat side down | 100% | none; 5 mm brim |
-| `c4002_case_base_extended.stl` | 1 | as exported, flat | gyroid 40% | none |
+| `c4002_case_base_extended.stl` (the radar case on the long arm) | 1 | as exported, flat | gyroid 40% | none |
 | `c4002_case_lid.stl` | 1 | flat face down | gyroid 40% | none |
 | `c4002_case_Swivel_mount.stl` | 1 | as exported, flat | gyroid 40% | none |
 | `bearing_retainer.stl` | only if the 606ZZ sits loose in its seat (step 6) | flat | 100% | none |
 
 The fairlead flap, the extended radar case and the swivel mount are my own files (Fusion), printed as they come; everything else is written by `cad/generate.py` and friends.
 
-Don't print these: `fairlead_body.stl` and `fairlead_flap.stl` (the ceiling install's fairlead), `c4002_case_base.stl` and `c4002_case_short_mount.stl` (the earlier fixed-tilt radar mount; it fits the same holes if you'd rather have it), `spool_body.stl`, `spool_ratchet.stl`, `spool_shield.stl` and `spacer_A_6mm.stl` (the old three-piece spool stack), `ld2450_cradle.stl` (a radar I no longer use), and anything in `cad/retired/`. The `.3mf` files beside the STLs are my own Bambu Studio projects, not the way to print.
+The radar case comes in two arms: short (`c4002_case_base.stl`, the code's) and long (`c4002_case_base_extended.stl`, 19 mm longer from the pivot to the case, so it clears the door overhang and the brick). I run the long one and it's the one to print.
+
+Don't print these: `fairlead_body.stl` and `fairlead_flap.stl` (the ceiling install's fairlead), `c4002_case_base.stl` and `c4002_case_short_mount.stl` (the short arm and its fixed-tilt mount; they fit the same holes if you'd rather have them), `spool_body.stl`, `spool_ratchet.stl`, `spool_shield.stl` and `spacer_A_6mm.stl` (the old three-piece spool stack), `ld2450_cradle.stl` (a radar I no longer use), and anything in `cad/retired/`. The `.3mf` files beside the STLs are my own Bambu Studio projects, not the way to print.
 
 ## B. Sub-assemble the spool (Rev C.4: `spool_onepiece` plus `spool_cap`)
 

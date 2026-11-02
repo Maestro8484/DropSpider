@@ -26,7 +26,7 @@ What's here, in print order, all PLA at 0.2 mm, 4 walls, 5 top and bottom layers
 - finger (1, print a spare): the lock. Flat top face down, hub up, 100%, 5 mm brim. PETG if you have it.
 - fairlead_base (1): the block under the base the line runs through, carrying the flap and the switch. Gyroid 40%, 5 mm brim.
 - fairlead_flap_inv (1, print a spare): the hinged flap a bead on the line lifts when the spider is home. Flat side down, 100%.
-- c4002_case_base_extended, c4002_case_lid, c4002_case_Swivel_mount (1 each): the radar's snap-lid case and a mount that tilts and swivels. Gyroid 40%, no supports.
+- c4002_case_base_extended, c4002_case_lid, c4002_case_Swivel_mount (1 each): the radar's snap-lid case on its long arm, and a mount that tilts and swivels. Gyroid 40%, no supports. There's a short-arm case too (c4002_case_base, on GitHub); the long one is what I run and the one to print.
 - bearing_retainer: only if the 606ZZ sits loose in its seat.
 
 Every part except the three radar case files and the flap is Python code (cad/generate.py and friends, on GitHub): change a number, run it, and it writes the STLs and checks them (watertight, 2 mm clearance round the spinning spool, the finger seats in a tooth gap).
