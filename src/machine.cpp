@@ -213,6 +213,11 @@ static int teachWasArmed = 0;
 // to the switch counting the steps; that count plus the spool-to-eyelet length becomes
 // `line`. Runs as a teach (same flag, same abort paths) with measureLine set.
 static bool measureLine = false;
+// Set when the measure's let-out ends: the next ST_RETRY_WAIT starts the whole-line wind.
+// Only that first wind is a fresh rewind; a miss then takes the one standard retry
+// (lower 1/2 turn, 2.5 slow turns) and the fault, never another whole wind (2026-11-02:
+// the first measure on the porch wound 3077 mm seven times over before it was stopped).
+static bool measureWindPending = false;
 // Rehome (owner 2026-10-13, 3 presses of the switch): from anywhere, lower 1/2 turn
 // so the stopper is surely below the flap, then wind slowly to the switch.
 static bool rehoming = false;
@@ -712,6 +717,7 @@ static void handleReq(const Req &r) {
     // would finish it (and a stopped teach would set the drop length).
     if (teaching) { teaching = false; S.armed = teachWasArmed; }
     if (rehoming) { rehoming = false; S.armed = rehomeWasArmed; }
+    measureWindPending = false;
     recKind = -1;
     cycle = false;
     faultNow = false;
@@ -751,7 +757,7 @@ static void handleReq(const Req &r) {
   if (r.a == ACT_MEASURE) {
     if (!S.limitFitted) { logf("[measure] needs the limit switch fitted (limit 1)"); return; }
     teachWasArmed = S.armed;
-    teaching = true; measureLine = true;
+    teaching = true; measureLine = true; measureWindPending = false;
     unloadRan = 0;
     logf("[measure] letting the whole thread out at %d rpm (up to %d mm), then winding it all up to the switch, counting", FEED_RPM, LINE_MAX_MM);
     benchMoveFingerOut(ACT_JOG, -longestLineSteps());
@@ -996,7 +1002,7 @@ static void step() {
 
     case ST_RETRY_WAIT:
       if (inState() < (rewindRehomes ? REHOME_SETTLE_MS : RETRY_SETTLE_MS)) break;
-      if (teaching && measureLine) { startRewind(FEED_RPM); break; }
+      if (measureWindPending) { measureWindPending = false; startRewind(FEED_RPM); break; }
       if (!startMove(retryUpSteps, FEED_RPM)) logf("[rewind] %s would not start", rewindRehomes ? "whole-line wind" : "second try");
       enter(ST_REWIND);
       break;
@@ -1048,7 +1054,7 @@ static void step() {
       logf("[jog] ran %ld steps%s", stepper->getCurrentPosition() - moveStartPos,
            cutByLimit ? ", stopped by the limit switch" : "");
       if (rehoming) { startRewind(FEED_RPM); break; }
-      if (teaching && measureLine) { logf("[measure] the thread is all out: settling, then winding it up to the switch"); enter(ST_RETRY_WAIT); break; }
+      if (teaching && measureLine) { logf("[measure] the thread is all out: settling, then winding it up to the switch"); measureWindPending = true; enter(ST_RETRY_WAIT); break; }
       if (cutByLimit) { startLock("jog (stopped by the switch, finger in, seated, motor off)", BACKOFF_STEPS); break; }
       startLock("jog (finger in, seated, motor off)");
       break;
