@@ -4,6 +4,9 @@ Finished work, newest first, one plain line each. Shape from Keep a Changelog (k
 
 ## 2026-11-02
 
+### Changed
+- Roadmap 0d closed on the porch: fault log and cycles from the 2026-10-31 night read (every drop told 1263; the spool stopped following the motor on drop 515's rewind), flash 17 with `measure`, the new size 69 thread measured at 1892 mm (7 ft tied; the first measure found the limit switch blocked by the PTFE tube pushed too far down, the owner's fix), drop set to 1466 mm (8 inches longer, his 2026-10-31 ask), test drop and a radar drop at that length clean. Roadmap 0e holds the two small firmware follow-ups.
+
 ### Fixed
 - `measure` looped instead of faulting when the wind never met the switch: after a miss it restarted the whole-line wind from scratch, which forgot that it had already tried, so it lowered 1/2 turn and wound 3077 mm again every 17 s (seen on the porch at the first measure, stopped by hand after seven winds). Now only the first wind after the let-out is a fresh rewind; a miss takes the one standard retry (lower 1/2 turn, 2.5 slow turns) and then the fault, the way a drop's rewind does. Flash 18, `fw-16+18`.
 
