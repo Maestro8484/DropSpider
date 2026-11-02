@@ -45,6 +45,7 @@ Each file has one job. A **handoff** is work still to do, written so someone can
 | `docs/handoff_task1_firmware.md` | **handoff:** the bench tests T1 to T8 with the mechanism assembled |
 | `docs/handoff_sensor_bearings.md` | **handoff:** finish the radar bench (walk tests S2 to S5) and carry the numbers to the porch. The name is old |
 | `docs/handoff_flash11_page_sleep_led.md` | **handoff:** flash 11 onto the board and watch each new thing work |
+| `docs/handoff_publish.md` | **handoff:** make the repo ready for strangers and write the posts that share it: README, parts with links, print list, photos and video, social text |
 | `ROADMAP.md` | **roadmap:** everything still to do, in order, one line each |
 | `CHANGELOG.md` | **changelog:** finished work, newest first |
 | `cad/generate.py`, `cad/fairlead.py`, `cad/inverted.py`, `cad/c4002_case.py` | every printed part is Python; `cad/README.md` says how. `docs/diagrams.py` draws the wiring and install pictures |
