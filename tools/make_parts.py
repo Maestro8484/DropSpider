@@ -77,7 +77,7 @@ PUBLIC_NOTE = {
     "W4": "signals by jumper; the 12 V run in 22 AWG",
     "N10": "radar and switch leads round the end of the base to the board",
     "N6": "12 V from the outlet up to the beam",
-    "N13": "a guide tube for the line through the base; try it without first",
+    "N13": "the line's guide tube through the base, the kind a 3D printer feeds filament through; on my build it's what keeps the line lined up and the re-spooling smooth",
     "N1": "only if you use braid or fishing line instead of the nylon thread",
     "N5": "only if the board restarts when the finger moves",
 }

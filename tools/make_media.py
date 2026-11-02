@@ -12,7 +12,11 @@ Drop phone photos and clips there, any names, any order, then double-click scrip
                                 way up, every bit of EXIF (GPS included) stripped. A photo keeps its number for
                                 good: media/sources.txt remembers which original became which porch_NN.
   media/captions.txt         -> one line per picture, "porch_01.jpg: caption". A new picture gets a placeholder
-                                line; a line you have edited is never touched. Edit it, run again.
+                                line (the words from its file name if it has any); a line you have edited is never
+                                touched. The ORDER of the lines is the order in the README, so move lines to
+                                reorder. A caption of just "skip" keeps that picture out of the README and out of
+                                the project (its copy is removed; the original in the drop folder is never touched).
+                                The first picture shown goes full width, the rest two to a row.
   clips (.mp4 .mov)          -> media/clip_01.mp4 ... Over 20 s or over 10 MB: a 10 s copy from the start,
                                 720 px tall, made with ffmpeg if it is on this PC (else the clip is left and the
                                 run says so). A poster picture (the first frame) beside each clip.
@@ -55,6 +59,16 @@ TARGET_KB = 300
 CLIP_MAX_S = 20
 CLIP_MAX_MB = 10
 PLACEHOLDER = "the device on the porch (edit this line in media/captions.txt)"
+SKIP = "skip"
+
+
+def placeholder_for(src_name):
+    """Words from a descriptive file name ('top-front-teflon-rachet.jpg' -> 'top front teflon rachet'); the
+    generic placeholder for a plain phone timestamp name."""
+    stem = os.path.splitext(src_name)[0]
+    stem = re.sub(r"^\d{4}-\d\d-\d\d \d\d\.\d\d\.\d\d(--)?", "", stem).strip(" -_")
+    words = re.sub(r"[-_]+", " ", stem).strip()
+    return words if words else PLACEHOLDER
 
 try:
     import pillow_heif  # noqa: F401
@@ -77,6 +91,43 @@ def read_pairs(path):
         if m:
             out[m.group(1)] = m.group(2).strip()
     return out
+
+
+def fingerprint(path):
+    """What a file is, whatever it is called: its size on disk, and for a photo its EXIF date and pixel size."""
+    try:
+        with Image.open(path) as im:
+            d = im.getexif().get(36867) or ""
+            return "%s %dx%d %d" % (d, im.width, im.height, os.path.getsize(path))
+    except Exception:
+        return "%d" % os.path.getsize(path)
+
+
+def read_sources():
+    """sources.txt: 'porch_01.jpg <- original name | fingerprint'. Returns {name: (original, fingerprint)}."""
+    out = {}
+    for k, v in read_pairs(SOURCES).items():
+        orig, _, fp = v.partition(" | ")
+        out[k] = (orig.strip(), fp.strip())
+    return out
+
+
+def follow_renames(sources, files):
+    """A mapped original that is gone, with an unmapped file of the same fingerprint present: it was renamed.
+    Point the mapping at the new name. Returns the renames made."""
+    mapped = {v[0] for v in sources.values()}
+    unmapped = {f: fingerprint(os.path.join(SRC, f)) for f in files if f not in mapped}
+    renamed = []
+    for name, (orig, fp) in list(sources.items()):
+        if os.path.exists(os.path.join(SRC, orig)) or not fp:
+            continue
+        for f, f_fp in list(unmapped.items()):
+            if f_fp == fp:
+                sources[name] = (f, fp)
+                del unmapped[f]
+                renamed.append("%s: %s is now %s" % (name, orig, f))
+                break
+    return renamed
 
 
 def write_if_changed(path, text):
@@ -197,8 +248,11 @@ def main():
     clips = [f for f in files if f.lower().endswith(CLIP_EXT)]
     yt = [f for f in files if f.lower() == "youtube.txt"]
 
-    # which original became which porch_NN: numbers never change once given
-    sources = read_pairs(SOURCES)          # porch_01.jpg -> original name
+    # which original became which porch_NN: numbers never change once given, and a renamed original keeps its number
+    full = read_sources()                  # porch_01.jpg -> (original name, fingerprint)
+    for r in follow_renames(full, photos + clips):
+        print("renamed in the drop folder, same number kept: " + r)
+    sources = {k: v[0] for k, v in full.items()}
     by_source = {v: k for k, v in sources.items()}
     new_photos = [f for f in photos if f not in by_source]
     new_photos.sort(key=lambda f: taken(os.path.join(SRC, f)))
@@ -209,10 +263,16 @@ def main():
         sources[name] = f
         by_source[f] = name
 
+    captions = read_pairs(CAPTIONS)   # read first: a "skip" line means no copy is made
     skipped = []
     for name, f in sorted(sources.items()):
         src = os.path.join(SRC, f)
         dst = os.path.join(MEDIA, name)
+        if captions.get(name, "").strip().lower() == SKIP:
+            if os.path.exists(dst) and not check:
+                os.remove(dst)
+                changed.append(name + " removed (skip)")
+            continue
         if not os.path.exists(src):
             continue  # the original is gone; the copy already made stays
         if f.lower().endswith(".heic") and not HEIC:
@@ -256,21 +316,29 @@ def main():
             print("youtube.txt has no YouTube link I can read")
 
     if not check:
-        lines = ["# which original in the drop folder became which file here. Made by tools/make_media.py; a number never changes."]
-        lines += ["%s <- %s" % (k, v) for k, v in sorted(sources.items())]
+        lines = ["# which original in the drop folder became which file here, and its fingerprint (date, pixels, bytes) so a",
+                 "# renamed original keeps its number. Made by tools/make_media.py; a number never changes."]
+        for k, v in sorted(sources.items()):
+            p = os.path.join(SRC, v)
+            fp = fingerprint(p) if os.path.exists(p) else full.get(k, ("", ""))[1]
+            lines.append("%s <- %s | %s" % (k, v, fp))
         if write_if_changed(SOURCES, "\n".join(lines) + "\n"):
             changed.append("sources.txt")
 
     # captions: add a placeholder line per new picture, never touch an existing line
-    captions = read_pairs(CAPTIONS)
     cap_lines = open(CAPTIONS, encoding="utf-8").read().splitlines() if os.path.exists(CAPTIONS) else [
-        "# One line per picture: file name, colon, the caption that shows under it in the README. Edit the words, run add_photos.bat again."]
+        "# One line per picture: file name, colon, the caption that shows under it in the README.",
+        "# The order of these lines is the order in the README. A caption of just 'skip' leaves that picture out.",
+        "# Edit, then run add_photos.bat again."]
     for name in sorted(k for k in sources if k.startswith("porch_")):
         if name not in captions and os.path.exists(os.path.join(MEDIA, name)):
-            cap_lines.append("%s: %s" % (name, PLACEHOLDER))
-            captions[name] = PLACEHOLDER
+            cap = placeholder_for(sources[name])
+            cap_lines.append("%s: %s" % (name, cap))
+            captions[name] = cap
     if not check and write_if_changed(CAPTIONS, "\n".join(cap_lines) + "\n"):
         changed.append("captions.txt")
+    shown = [n for n in captions if n.startswith("porch_") and captions[n].strip().lower() != SKIP
+             and os.path.exists(os.path.join(MEDIA, n))]   # captions.txt order
 
     # README slots
     top = []
@@ -281,16 +349,25 @@ def main():
         top.append("[![The spider dropping; click for the clip](media/%s)](media/%s)" % (clip_names[first_clip], first_clip))
         top.append("")
         top.append("*Click the picture for the clip (mp4).*")
+    def img(name):
+        return "![%s](media/%s)" % (captions[name].replace("]", ")").replace("|", "/"), name)
+
+    def cap(name):
+        return "*%s*" % captions[name].replace("|", "/")
+
     gallery = []
-    for name in sorted(k for k in sources if k.startswith("porch_") and os.path.exists(os.path.join(MEDIA, k))):
-        cap = captions.get(name, PLACEHOLDER)
-        gallery.append("![%s](media/%s)" % (cap.replace("]", ")"), name))
-        gallery.append("")
-        gallery.append("*%s*" % cap)
-        gallery.append("")
-    for name in sorted(clip_names)[1:] if yt_url else sorted(clip_names)[1:]:
+    if shown:
+        gallery += [img(shown[0]), "", cap(shown[0]), ""]
+        rest = shown[1:]
+        if rest:
+            gallery += ["| | |", "|---|---|"]
+            for a, b in zip(rest[0::2], rest[1::2] + [None]):
+                gallery.append("| %s | %s |" % (img(a), img(b) if b else ""))
+                gallery.append("| %s | %s |" % (cap(a), cap(b) if b else ""))
+            gallery.append("")
+    for name in sorted(clip_names)[1:]:
         gallery.append("- [Another clip](media/%s) (mp4)" % name)
-    if gallery and gallery[-1] == "":
+    while gallery and gallery[-1] == "":
         gallery.pop()
 
     readme = open(README, encoding="utf-8").read()

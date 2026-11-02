@@ -1,1 +1,26 @@
-# which original in the drop folder became which file here. Made by tools/make_media.py; a number never changes.
+# which original in the drop folder became which file here, and its fingerprint (date, pixels, bytes) so a
+# renamed original keeps its number. Made by tools/make_media.py; a number never changes.
+porch_01.jpg <- top-top-center.jpg |  2135x2579 748179
+porch_02.jpg <- 2026-11-02 14.02.20.jpg |  2268x4032 4065648
+porch_03.jpg <- 2026-11-02 14.02.24.jpg |  2268x4032 3136165
+porch_04.jpg <- 2026-11-02 14.02.30.jpg |  2268x4032 3821339
+porch_05.jpg <- 2026-11-02 14.02.34.jpg |  2268x4032 4627637
+porch_06.jpg <- 2026-11-02 14.02.42.jpg |  2268x4032 4591662
+porch_07.jpg <- 2026-11-02 14.02.57.jpg |  2268x4032 4854172
+porch_08.jpg <- top-front-teflon-rachet.jpg |  2268x3266 1050856
+porch_09.jpg <- 2026-11-02 14.03.01 bottom limit switch.jpg |  1666x2269 524584
+porch_10.jpg <- 2026-11-02 14.03.27.jpg |  2268x4032 6041104
+porch_11.jpg <- 2026-11-02 14.03.28.jpg |  2268x4032 2668970
+porch_12.jpg <- bottom-un-installed.jpg |  1781x3355 885783
+porch_13.jpg <- 2026-11-02 14.04.01.jpg |  4032x2268 4611268
+porch_14.jpg <- 2026-11-02 14.04.04.jpg |  4032x2268 5470851
+porch_15.jpg <- 2026-11-02 14.04.35.jpg |  4032x2268 4249211
+porch_16.jpg <- 2026-11-02 14.04.37.jpg |  4032x2268 3940314
+porch_17.jpg <- 2026-11-02 14.04.39.jpg |  4032x2268 4489663
+porch_18.jpg <- 2026-11-02 14.04.47.jpg |  4032x2268 4601152
+porch_19.jpg <- 2026-11-02 14.04.50.jpg |  4032x2268 5610143
+porch_20.jpg <- 2026-11-02 14.05.05--spider-washer-string.jpg |  2268x2707 724976
+porch_21.jpg <- 2026-11-02 14.05.05.jpg |  2268x4032 3848183
+porch_22.jpg <- 2026-11-02 14.05.14.jpg |  2268x4032 3380458
+porch_23.jpg <- 2026-11-02 14.05.25 top-front-center.jpg |  3028x2006 1016939
+porch_24.jpg <- 2026-11-02 14.05.25.jpg |  2268x4032 4435386

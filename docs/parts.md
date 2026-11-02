@@ -47,6 +47,7 @@ Parts, if you own none of it: about $99 (today's Amazon prices, 10 items; the pr
 | 8 mm hard plastic bead (the stopper on the line) | 1 | any | the stopper: slides on the line and lifts the flap when the spider is home | |
 | small fishing barrel swivel (size 10 to 14) | 1 | any | between the stopper and the spider | |
 | soft foam spider about 13 g brought to about 30 g with added weight | 1 | any | a soft foam spider only, weighted to about 30 g; keep it under 60 g | |
+| 4 mm OD PTFE tube (3D printer kind; 2 mm bore) | 41 mm | any | the line's guide tube through the base, the kind a 3D printer feeds filament through; on my build it's what keeps the line lined up and the re-spooling smooth | |
 
 ## Only if
 
@@ -54,7 +55,6 @@ Skip these to start. Each one has a test that says whether you need it.
 
 | Part | Qty | Where | When |
 |---|---|---|---|
-| 4 mm OD PTFE tube (3D printer kind; 2 mm bore) | 41 mm | any | a guide tube for the line through the base; try it without first |
 | 2 mm round elastic cord | 150 mm | any | only if you use braid or fishing line instead of the nylon thread |
 | 470 uF 16 V electrolytic capacitor | 1 | any | only if the board restarts when the finger moves |
 

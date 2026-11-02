@@ -6,11 +6,23 @@
 <!-- video:end -->
 
 <!-- media:start -->
+![The whole thing off the beam: the radar up on its swivel arm, the board on the pad, the spool and the servo behind.](media/porch_02.jpg)
+
+*The whole thing off the beam: the radar up on its swivel arm, the board on the pad, the spool and the servo behind.*
+
+| | |
+|---|---|
+| ![The spool with its ratchet teeth, the finger that locks them, the servo under it, the red coupler to the motor. The white tube under the spool is PTFE tube from a 3D printer: it guides the line through the base, and it's what made the re-spooling smooth.](media/porch_08.jpg) | ![From underneath: the fairlead block with the flap and the switch where the line comes out, the radar on its arm at the far end.](media/porch_12.jpg) |
+| *The spool with its ratchet teeth, the finger that locks them, the servo under it, the red coupler to the motor. The white tube under the spool is PTFE tube from a 3D printer: it guides the line through the base, and it's what made the re-spooling smooth.* | *From underneath: the fairlead block with the flap and the switch where the line comes out, the radar on its arm at the far end.* |
+| ![The fairlead up close: the roller switch above the flap, the line down through the slot. The blob is hot glue over the switch leads.](media/porch_09.jpg) | ![The spider on its line. The washer is the stopper that lifts the flap at home. The short piece between the quick connector and the spider is 3 lb thread on purpose: a grab breaks there, not the line or the device.](media/porch_20.jpg) |
+| *The fairlead up close: the roller switch above the flap, the line down through the slot. The blob is hot glue over the switch leads.* | *The spider on its line. The washer is the stopper that lifts the flap at home. The short piece between the quick connector and the spider is 3 lb thread on purpose: a grab breaks there, not the line or the device.* |
+| ![From above: the ESP32 on its protoboard with the driver and the buck, the spool between the motor and the far bearing, the servo on its tower.](media/porch_01.jpg) | ![The front: the spool and its cap on the rod, the motor behind, the board's wiring over the top.](media/porch_23.jpg) |
+| *From above: the ESP32 on its protoboard with the driver and the buck, the spool between the motor and the far bearing, the servo on its tower.* | *The front: the spool and its cap on the rod, the motor behind, the board's wiring over the top.* |
 <!-- media:end -->
 
 ![The device turned over on two corner braces on the porch beam, line out through the base](docs/img/inverted_install.png)
 
-*The drawing. Photos and a clip of the real thing dropping go above it as soon as I've shot them.*
+*The drawing of the porch install. A clip of it dropping goes at the top once it's shot.*
 
 ## What it is
 
@@ -87,6 +99,7 @@ Parts, if you own none of it: about $99 (today's Amazon prices, 10 items; the pr
 | 8 mm hard plastic bead (the stopper on the line) | 1 | any | the stopper: slides on the line and lifts the flap when the spider is home | |
 | small fishing barrel swivel (size 10 to 14) | 1 | any | between the stopper and the spider | |
 | soft foam spider about 13 g brought to about 30 g with added weight | 1 | any | a soft foam spider only, weighted to about 30 g; keep it under 60 g | |
+| 4 mm OD PTFE tube (3D printer kind; 2 mm bore) | 41 mm | any | the line's guide tube through the base, the kind a 3D printer feeds filament through; on my build it's what keeps the line lined up and the re-spooling smooth | |
 <!-- parts:end -->
 
 ## The files
@@ -111,7 +124,7 @@ Every firmware the PC builds carries a version read from git, shown on the page'
 
 ## Where it stands
 
-Built and running. It has hung over the inside of my front door since October 2026, fired by the radar, more than 500 drops counted on the board, each one winding home to the switch and locking. Halloween night it ran there. What's next is on the roadmap: the new firmware that measures the thread itself, then the braces on the porch beam. What isn't proven yet is in `docs/08_open_items.md`, and the bench log has every result, failures included.
+Built and running. It has hung over the inside of my front door since October 2026, fired by the radar, more than 500 drops counted on the board, each one winding home to the switch and locking. Halloween night it ran there. What's next is on the roadmap: a new thread, measured by the board itself, then the braces on the porch beam. What isn't proven yet is in `docs/08_open_items.md`, and the bench log has every result, failures included.
 
 The name `dropspider-tiltspool` is kept for Mechanism B (a servo tilts the spool and the spider free-falls). Not started.
 

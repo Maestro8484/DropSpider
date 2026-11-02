@@ -1,1 +1,27 @@
-# One line per picture: file name, colon, the caption that shows under it in the README. Edit the words, run add_photos.bat again.
+# One line per picture: file name, colon, the caption that shows under it in the README.
+# The order of these lines is the order in the README. A caption of just 'skip' leaves that picture out.
+# Edit, then run add_photos.bat again.
+porch_02.jpg: The whole thing off the beam: the radar up on its swivel arm, the board on the pad, the spool and the servo behind.
+porch_08.jpg: The spool with its ratchet teeth, the finger that locks them, the servo under it, the red coupler to the motor. The white tube under the spool is PTFE tube from a 3D printer: it guides the line through the base, and it's what made the re-spooling smooth.
+porch_12.jpg: From underneath: the fairlead block with the flap and the switch where the line comes out, the radar on its arm at the far end.
+porch_09.jpg: The fairlead up close: the roller switch above the flap, the line down through the slot. The blob is hot glue over the switch leads.
+porch_20.jpg: The spider on its line. The washer is the stopper that lifts the flap at home. The short piece between the quick connector and the spider is 3 lb thread on purpose: a grab breaks there, not the line or the device.
+porch_01.jpg: From above: the ESP32 on its protoboard with the driver and the buck, the spool between the motor and the far bearing, the servo on its tower.
+porch_23.jpg: The front: the spool and its cap on the rod, the motor behind, the board's wiring over the top.
+porch_03.jpg: skip
+porch_04.jpg: skip
+porch_05.jpg: skip
+porch_06.jpg: skip
+porch_07.jpg: skip
+porch_10.jpg: skip
+porch_11.jpg: skip
+porch_13.jpg: skip
+porch_14.jpg: skip
+porch_15.jpg: skip
+porch_16.jpg: skip
+porch_17.jpg: skip
+porch_18.jpg: skip
+porch_19.jpg: skip
+porch_21.jpg: skip
+porch_22.jpg: skip
+porch_24.jpg: skip

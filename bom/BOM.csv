@@ -36,7 +36,7 @@ W4,dupont jumpers female-female and 22 AWG wire + heat shrink,1 set,any,,have,si
 N10,4-conductor cable 1 m or dupont extensions,1,any,,have,radar and switch leads round the base's pad end,,
 N6,5.5 x 2.1 mm DC extension cable 3 to 5 m,1,any,,TO BUY,12 V from the outlet up to the beam,,
 N7,#4 x 1 in pan-head screws + ribbed drywall anchors,4,any,,ceiling install only,not used in the inverted install,,
-N13,4 mm OD PTFE tube (3D printer kind; 2 mm bore),41 mm,any,,ONLY IF,optional guide tube up through the base hole (doc 09),,
+N13,4 mm OD PTFE tube (3D printer kind; 2 mm bore),41 mm,any,,have,guide tube up through the base hole (doc 09); fitted on my build and it is what keeps the line lined up and the re-spooling smooth (owner 2026-11-02),,
 N1,2 mm round elastic cord,150 mm,any,,ONLY IF,snubber: only if the line is braid or fluorocarbon; not with the nylon thread,,
 N5,470 uF 16 V electrolytic capacitor,1,any,,ONLY IF ESP32 RESETS,at the servo; skip unless the board restarts when the finger moves,,
 N12,74AHCT125 quad buffer,1,any,,not needed,logic level: V1 closed 2026-10-01 with no buffer,,
