@@ -17,3 +17,6 @@ __pycache__/
 
 # Codex review bundle written by the /mad auditor; a copy of files already in the repo
 .mad/
+
+# Post drafts and anything else that stays on this PC and off GitHub (owner 2026-11-02)
+private/

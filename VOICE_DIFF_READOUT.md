@@ -76,4 +76,4 @@ POST, new second paragraph: `Two installs are in this doc. The first half is the
 
 ## Checked after the rewrite
 
-No em dash, en dash, curly quote, ellipsis character or arrow in README.md, docs/parts.md, docs/05_assembly.md, docs/06_installation.md, docs/social/ or the build guide source (grep, 2026-11-02). No "repo", "commit", "ship", "deploy" or the rest of the banned developer words in the README or the posts (grep). Numbers, part names and direction rules unchanged.
+No em dash, en dash, curly quote, ellipsis character or arrow in README.md, docs/parts.md, docs/05_assembly.md, docs/06_installation.md, the post drafts (now in `private/`, off GitHub) or the build guide source (grep, 2026-11-02). No "repo", "commit", "ship", "deploy" or the rest of the banned developer words in the README or the posts (grep). Numbers, part names and direction rules unchanged.
