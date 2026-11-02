@@ -1,5 +1,5 @@
 ref,item,qty,source,asin_or_part,status,notes,paid_usd,price_now_usd
-M1,STEPPERONLINE NEMA 11 bipolar 0.67A 6Ncm (round shaft),1,amazon.com,B00PNEPF4O,have,Vref 0.85 V to start; 0.935 V on the bench build,20.57,gone
+M1,NEMA 11 stepper 28 mm bipolar 6.5Ncm 0.8A 5 mm shaft (Iverntech 28HD1411-02; mine is the STEPPERONLINE 11HS12-0674S; its listing is gone),1,amazon.com,B07PNV7RBW,have,Vref 0.85 V to start; 0.935 V on the bench build; coils are plug pins 4+3 and 2+1 (its wire colors may not match mine),20.57,15.99
 D1,BIGTREETECH TMC2209 V1.3 stepstick,1,amazon.com,B07ZPV4HFP,have,,9.99,9.99
 D2,A4988/DRV8825 stepper driver expansion board (2 pk),1,amazon.com,B0FQC39GJ2,have,DIP switch 1 ON; the V row is fed from the ESP32's 3V3 pin (doc 02),7.99,7.99
 C1,ESP32 DevKit V1 30-pin CP2102 USB-C (3 pk),1,amazon.com,B0CR5Y2JVD,have,the board in use (COM13); either board works; same GPIO numbers,19.99,16.99

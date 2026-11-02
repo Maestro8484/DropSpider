@@ -46,7 +46,7 @@ The full list with the "only if" rows is [docs/parts.md](docs/parts.md). Both co
 <!-- parts:start -->
 As an Amazon Associate I earn from qualifying purchases. The Amazon links below carry my tag; the price is the same for you.
 
-Parts, if you own none of it: about $94 (today's Amazon prices, 9 items; the printer, filament, a 12 V adapter and screws you may already have). Plus the STEPPERONLINE NEMA 11 bipolar 0.67A 6Ncm: the listing I bought from is gone (it was $21), so its link is a search for the same part.
+Parts, if you own none of it: about $110 (today's Amazon prices, 10 items; the printer, filament, a 12 V adapter and screws you may already have).
 
 | Part | Qty | Where | Note | Price |
 |---|---|---|---|---|
@@ -61,7 +61,7 @@ Parts, if you own none of it: about $94 (today's Amazon prices, 9 items; the pri
 | 4-conductor cable 1 m or dupont extensions | 1 | any | radar and switch leads round the end of the base to the board | |
 | 5.5 x 2.1 mm DC extension cable 3 to 5 m | 1 | any | 12 V from the outlet up to the beam | |
 | **Motor, drive and lock** | | | | |
-| STEPPERONLINE NEMA 11 bipolar 0.67A 6Ncm (round shaft) | 1 | [Amazon search](https://www.amazon.com/s?k=STEPPERONLINE+NEMA+11+bipolar+0.67A+6Ncm&tag=maestro8484-20) (my listing is gone) | set the driver to 0.85 V before it moves (build guide, section 07) | |
+| NEMA 11 stepper 28 mm bipolar 6.5Ncm 0.8A 5 mm shaft (Iverntech 28HD1411-02; mine is the STEPPERONLINE 11HS12-0674S; its listing is gone) | 1 | [Amazon](https://www.amazon.com/dp/B07PNV7RBW?tag=maestro8484-20) | set the driver to 0.85 V before it moves (build guide, section 07) | $15.99 |
 | BIGTREETECH TMC2209 V1.3 stepstick | 1 | [Amazon](https://www.amazon.com/dp/B07ZPV4HFP?tag=maestro8484-20) | the stepper driver | $9.99 |
 | A4988/DRV8825 stepper driver expansion board (2 pk) | 1 | [Amazon](https://www.amazon.com/dp/B0FQC39GJ2?tag=maestro8484-20) | the driver plugs into this; it has the screw terminal for 12 V | $7.99 |
 | SG90 micro servo | 1 | [Amazon](https://www.amazon.com/dp/B072V529YD?tag=maestro8484-20) | swings the finger that locks the spool; an MG90 works too | $19.99 |
