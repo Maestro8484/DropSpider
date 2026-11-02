@@ -45,6 +45,7 @@ Each file has one job. A **handoff** is work still to do, written so someone can
 | `docs/handoff_task1_firmware.md` | **handoff:** the bench tests T1 to T8 with the mechanism assembled |
 | `docs/handoff_sensor_bearings.md` | **handoff:** finish the radar bench (walk tests S2 to S5) and carry the numbers to the porch. The name is old |
 | `docs/handoff_flash11_page_sleep_led.md` | **handoff:** flash 11 onto the board and watch each new thing work |
+| `docs/handoff_amazon_prices.md` | **handoff:** an Opus session with Claude in Chrome reads what each part cost in the owner's Amazon orders and what it costs today, into the BOM, for the parts total |
 | `docs/handoff_publish.md` | **handoff:** make the repo ready for strangers and write the posts that share it: README, parts with links, print list, photos and video, social text |
 | `ROADMAP.md` | **roadmap:** everything still to do, in order, one line each |
 | `CHANGELOG.md` | **changelog:** finished work, newest first |
