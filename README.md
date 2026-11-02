@@ -2,7 +2,7 @@
 
 **A Halloween prop that drops a foam spider on people walking up to the door, winds it back up and waits for the next one.** This is Mechanism A, the in-line single-axle clutch spool, Rev C.1. A stepper motor, a one-way bearing, a servo-driven ratchet finger and a 24 GHz mmWave radar, all on an ESP32, in a 3D printed bracket that sits upside down on two steel corner braces on the porch beam. Drops 0.5 to 1.2 m. Draws almost nothing while it waits.
 
-Code and files: https://github.com/Maestro8484/DropSpider-inline. Project page: https://theschmidtwithin.com/bench/#dropspider
+Code and files: https://github.com/Maestro8484/DropSpider. Project page: https://theschmidtwithin.com/bench/#dropspider
 
 The name `dropspider-tiltspool` is saved for Mechanism B (a servo tilts the spool and the spider free-falls). Not started. This is Mechanism A only.
 

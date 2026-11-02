@@ -2,6 +2,14 @@
 
 Finished work, newest first, one plain line each. Shape from Keep a Changelog (keepachangelog.com). Work still to do is in `ROADMAP.md`; the full detail of any line is in the git history for that date.
 
+## 2026-11-02
+
+### Changed
+- The GitHub repo is `Maestro8484/DropSpider` (was `DropSpider-inline`; owner: "yes to the removal of inline"). The old address redirects. The README and build guide links, the git remote, the GitHub description and topics follow. The local folder keeps its name.
+
+### Added
+- `docs/handoff_publish.md`, the brief for making the repo ready for strangers and sharing it (roadmap 8c): README in the owner's voice with the video first, parts table with his Amazon links from the BOM, one print list, the build guide read cold, a photo and video drop folder with a .bat, paste-ready posts. Owner's three answers recorded in it: rename yes, Amazon tag yes, parts total when the photos come.
+
 ## 2026-11-01
 
 ### Added

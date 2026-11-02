@@ -11,7 +11,7 @@ This file is a pointer. The repo wins. If a fact here disagrees with a file, thi
 - The measure firmware is on the board and the new thread measured: `grep -n "0d" ROADMAP.md` shows row 0d gone or marked done, and `docs/commissioning_log.md` has a 2026-11 row with a `[measure]` line. If not, this brief waits: the README's status section cannot claim a porch-proven device until it is.
 - Read `C:\Users\SuperMaster\.claude\skills\joevoice\SKILL.md` in full, then the voice profile it names. Every human-facing word in this task goes through it.
 - Read `C:\Users\SuperMaster\.claude\skills\repo-docs\SKILL.md`: the doc roles, and "existing names win".
-- The Amazon Associates tag: `maestro8484-20`, recorded in the ChronoBloom project's memory (`C:\Users\SuperMaster\.claude\projects\C--Users-SuperMaster-Documents-PlatformIO-chronobloom-esp32c3\memory\project_state.md`, "recorded but wired nowhere, owner decision"). Confirm with the owner in one line before it goes into a public file: "Amazon links carry tag maestro8484-20, yes or no?" Amazon's program rules require a plain disclosure near the links ("As an Amazon Associate I earn from qualifying purchases"); the script writes it.
+- The Amazon Associates tag: `maestro8484-20`, recorded in the ChronoBloom project's memory (`C:\Users\SuperMaster\.claude\projects\C--Users-SuperMaster-Documents-PlatformIO-chronobloom-esp32c3\memory\project_state.md`, "recorded but wired nowhere, owner decision"). The owner said yes on 2026-11-02 ("yes to all 3"): the tag goes on every Amazon link, no need to ask again. Amazon's program rules require a plain disclosure near the links ("As an Amazon Associate I earn from qualifying purchases"); the script writes it.
 - `scripts\check_repo.bat` option 1 passes before the first edit (passwords out, doc map complete, no dead links, every STL present). It must pass again at the end.
 
 ## Read first, in order
@@ -26,17 +26,15 @@ This file is a pointer. The repo wins. If a fact here disagrees with a file, thi
 
 ## The work, in order
 
-### 1. The name (a decision for the owner, one line)
+### 1. The name: settled, nothing to ask
 
-The GitHub name is `DropSpider-inline`. "inline" is the mechanism's name (in-line clutch spool) and means nothing to a stranger; "DropSpider" is the name people will search and say. GitHub renames keep the old URL redirecting, and the local folder stays `DropSpider-inline` (Claude's memory for this project keys off the folder path; do not move the folder). Mechanism B keeps the name `dropspider-tiltspool` the README already reserves.
-
-Advise: rename the GitHub repo to `DropSpider` (`gh repo rename DropSpider`), update the URL in `README.md`, `CHANGELOG.md`, the build guide, the project page and the git remote (`git remote set-url origin ...`). Ask the owner: "Rename the GitHub repo to DropSpider, yes or no?" and do what he says. Either way, set the GitHub topics (`gh repo edit --add-topic halloween,esp32,3d-printing,stepper-motor,mmwave,prop,platformio,arduino`) and the description to one plain sentence.
+The owner said yes on 2026-11-02 ("yes to the removal of inline") and the GitHub repo is now `https://github.com/Maestro8484/DropSpider` (renamed with `gh repo rename`; the old URL redirects). The local folder stays `DropSpider-inline`: Claude's memory for this project keys off the folder path, so do not move it. The git remote, the README link and the build guide link already point at the new name; the GitHub description and topics are set. Mechanism B keeps the name `dropspider-tiltspool` the README reserves. Left for this session: the project page at theschmidtwithin.com, if it links the old URL (the redirect covers it, but fix the text).
 
 ### 2. Parts to buy, generated from the BOM, with the owner's Amazon links
 
 Build `tools/make_parts.py`: reads `bom/BOM.csv`, writes `docs/parts.md` (and the same table into the README's parts slot, see step 4) with one row per part a builder needs: item, qty, a link, and the one note that matters. Rules: rows with `source` amazon.com and an ASIN get `https://www.amazon.com/dp/<ASIN>?tag=maestro8484-20` (tag only after the owner's yes; a `--no-tag` switch writes plain links); dfrobot.com rows link to the product page; `any` rows say "any hardware store" or "any" and give the spec. Rows with status `not needed`, `parked`, `ceiling install only`, `owner's stock` and `ONLY IF ...` go to a short second table ("only if...") or are left out; the script decides by status, never by hand. A grouped order: electronics, motion parts, hardware, line and spider. The disclosure line sits above the table. `scripts\check_repo.bat` runs the script and fails if `docs/parts.md` is stale against the CSV (same pattern as the build guide check, read `tools/check_repo.py`). Column `status` keeps its meaning for the owner; a new column is allowed only if the script needs it (for example `group`), and the CSV header line stays the first line.
 
-Prices: the script does not fetch Amazon (their pages block scripts and prices move). The README gives one honest total as a range the owner confirms ("about $X to $Y in parts if you have none of it; the printer, filament and a 12 V adapter you may already own"). Ask the owner for the figure in one line, or sum what the BOM notes say if they carry prices; never invent a number.
+Prices: the script does not fetch Amazon (their pages block scripts and prices move). The README gives one honest total as a range the owner confirms ("about $X to $Y in parts if you have none of it; the printer, filament and a 12 V adapter you may already own"). The owner said on 2026-11-02 the total will be "provided at time of photos": when he drops the photos in the media folder, ask for the figure in one line, write it in, and until then the README says "parts total coming" rather than a number; never invent one.
 
 ### 3. Photos and video: one folder, one .bat, the README fills itself
 
