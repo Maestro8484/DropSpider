@@ -1,0 +1,1 @@
+No clip in the drop folder yet. Drop an .mp4 or .mov there and run add_photos.bat.

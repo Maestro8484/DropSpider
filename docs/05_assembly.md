@@ -6,7 +6,27 @@ Time: about 5 h printing, 1 h assembly. Tools: small Phillips, 1.5 mm and 2 mm h
 
 ## A. Print
 
-All PLA except the finger (PETG if you have it). Settings table in `01_mechanical_design.md`. Minimum set: 1 of each part. Spares worth printing: 1 extra finger, 1 extra flap. Shims only if step 8 calls for them.
+One list, in print order, for the inverted install (the device turned over on the beam). PLA, 0.2 mm layers, 4 walls, 5 top and bottom layers; the finger in PETG if you have some loaded. The orientation is baked into every STL: load it and print it as it lands. About 5 hours all in. The settings in full, and the ceiling install's parts, are in `01_mechanical_design.md`, "Materials and print settings".
+
+| Print | Qty | How it sits on the bed | Infill | Supports |
+|---|---|---|---|---|
+| `bracket.stl` | 1 | base down, as exported | gyroid 40% | tree, everywhere (not build-plate-only) |
+| `spool_onepiece.stl` | 1 | ratchet teeth down | cross hatch 15% (it's nearly all walls) | none |
+| `spool_cap.stl` | 1 | flat outer face down, lugs up | cross hatch 15% | none |
+| `spacer_A_nose_7_5mm.stl` | 1 | on end, nose up | 100% | none; 5 mm brim |
+| `spacer_B_50mm.stl` | 1 | on end | 100% | none; 5 mm brim |
+| `shim_1mm.stl`, `shim_2mm.stl` | 2 of each | flat | 100% | none |
+| `finger.stl` | 1, plus a spare | flat top face down, hub standing up | 100% | none; 5 mm brim. PETG if you have it |
+| `fairlead_base.stl` | 1 | as exported, 17 mm tall | gyroid 40% | none; 5 mm brim |
+| `fairlead_flap_inv.stl` | 1, plus a spare | flat side down | 100% | none; 5 mm brim |
+| `c4002_case_base_extended.stl` | 1 | as exported, flat | gyroid 40% | none |
+| `c4002_case_lid.stl` | 1 | flat face down | gyroid 40% | none |
+| `c4002_case_Swivel_mount.stl` | 1 | as exported, flat | gyroid 40% | none |
+| `bearing_retainer.stl` | only if the 606ZZ sits loose in its seat (step 6) | flat | 100% | none |
+
+The fairlead flap, the extended radar case and the swivel mount are my own files (Fusion), printed as they come; everything else is written by `cad/generate.py` and friends.
+
+Don't print these: `fairlead_body.stl` and `fairlead_flap.stl` (the ceiling install's fairlead), `c4002_case_base.stl` and `c4002_case_short_mount.stl` (the earlier fixed-tilt radar mount; it fits the same holes if you'd rather have it), `spool_body.stl`, `spool_ratchet.stl`, `spool_shield.stl` and `spacer_A_6mm.stl` (the old three-piece spool stack), `ld2450_cradle.stl` (a radar I no longer use), and anything in `cad/retired/`. The `.3mf` files beside the STLs are my own Bambu Studio projects, not the way to print.
 
 ## B. Sub-assemble the spool (Rev C.4: `spool_onepiece` plus `spool_cap`)
 
@@ -16,7 +36,7 @@ Two printed parts, no screws, no glue except the drop of CA on the line's knot. 
 2. Check its direction now: push a spare piece of the 6 mm rod in, hold the rod, and spin the body. It must spin freely one way and lock the other. Mark the free direction on the separator (the disc between the teeth and the barrel) with a marker.
 3. Look at the spool from the **teeth side** (this side faces the motor, so this is the view from behind the motor). The free direction marked in step 2 must be **clockwise** from this side, so it locks counterclockwise (Rev C.1; Rev C had this backwards). If not, press the bearing out and flip it.
 4. Anchor the line **before the cap goes on**: the cap closes the far ends of the spoke windows. The line is **bonded nylon upholstery thread, size 69 (Tex 70), black** (0.29 mm, 11 lb). The 1.2 mm line hole is printed in, mid-barrel, between two spokes. Push the thread in from outside, fish it out of the window's open end, tie it round a 10 mm stub of 1.75 mm filament (a double overhand), and pull it back so the stub lies across the hole inside the window. A drop of CA on the knot. The stub cannot pull through the hole, so the line cannot slip round the barrel even if the spider runs the line out.
-5. Fit `spool_cap`: its three lugs into the three spoke windows (a snug drop-in; a stroke of a file on a lug's side if one will not go), which lines its three holes up over the pilots in the spokes, then drive **3x M3x8** through it into the body. Snug, do not strip; the cap must sit flat on the body with no gap at the barrel's edge anywhere round (that gap is where a thread would wedge). If there is one, back the screws off, scrape any lip off the hole edges, and tighten again. Then wind clockwise (seen from behind the motor), under light hand tension so the wraps lie tight, the first turn over the line's tail. Wind on about 1.5 m of spare first (two drops' worth): about 10 turns, under one layer on the 3.5 mm barrel, so the drop length changes by about 1 percent. If the line breaks, unwind the spare and retie. Set `line` to the working length only (the barrel to the stopper), as if the spare were part of the barrel. No elastic, no braid. The window ends on the motor face stay open, so the anchor can be reached there with the cap on.
+5. Fit `spool_cap`: its three lugs into the three spoke windows (a snug drop-in; a stroke of a file on a lug's side if one will not go), which lines its three holes up over the pilots in the spokes, then drive **3x M3x8** through it into the body. Snug, do not strip; the cap must sit flat on the body with no gap at the barrel's edge anywhere round (that gap is where a thread would wedge). If there is one, back the screws off, scrape any lip off the hole edges, and tighten again. Then wind the whole thread on clockwise (seen from behind the motor), under light hand tension so the wraps lie tight, the first turn over the line's tail. About 7 ft of thread; the board measures it later (step 18). No elastic, no braid. The window ends on the motor face stay open, so the anchor can be reached there with the cap on.
 
 ## C. Frame and rod
 
@@ -31,7 +51,7 @@ Two printed parts, no screws, no glue except the drop of CA on the line's knot. 
 ![Step 3](img/step3.png)
 
 8. Measure from the motor plate's outer face to the free end of the coupler. **30 mm:** use `spacer_A_6mm`. **26 mm:** use the old 10 mm spacer A if you have one. **27 to 29 mm:** `spacer_A_6mm` plus `shim_1mm` / `shim_2mm` to make up the difference. **Over 30:** sand spacer A down by the difference. With the one-piece spool, `spacer_A_nose_7_5mm` replaces spacer A and its shims (doc 01).
-9. Hold, in line inside the frame: `spacer_A_nose_7_5mm` (next to the coupler, nose toward the spool), the spool (teeth toward the motor, cap toward the 606ZZ), `spacer_B_50mm` and its shims. **My build, Rev C.4, as a change from the C.3 one-piece stack:** motor side unchanged; 606ZZ side, **keep the C.3 stack as it is, no shim out**: spacer B passes through the cap's 11 mm centre hole and bears on the one-way bearing's far end, not the cap, so spacer B and its shims fill 53.36 mm against the 53.0 there, 0.36 mm of play, under the 0.5 allowed. Look at the bearing's far end first: the steel rim should be the highest thing there; if the black cage inside stands proud of it, say so before the stack goes on (spacer B would rub the cage). A cap printed with the old 7 mm hole: open it to about 11 mm with the deburring tool. If the 2026-10-04 stopgap is fitted (the old `spool_shield` disc on the far side plus a 2 mm shift shim), take both out. On another frame, stack snug but not tight the same way. Then check the teeth still sit between the finger's faces.
+9. Hold, in line inside the frame: `spacer_A_nose_7_5mm` (next to the coupler, nose toward the spool), the spool (teeth toward the motor, cap toward the 606ZZ), `spacer_B_50mm` and its shims. Spacer B passes through the cap's 11 mm centre hole and bears on the one-way bearing's far end, not the cap. Look at the bearing's far end first: the steel rim should be the highest thing there; if the black cage inside stands proud of it, stop before the stack goes on (spacer B would rub the cage). Stack snug but not tight, shims to make up the gap, end play under 0.5 mm (mine is 0.36). Then check the teeth sit between the finger's faces.
 
 ![Step 4](img/step4.png)
 
@@ -64,7 +84,7 @@ One `fairlead_body` and one `fairlead_flap` per device. Full detail in `09_fairl
 15. Screw `fairlead_body` to the pad: 2x **M3 countersunk (flat-head) screws, 8 to 10 mm**, put in from the ceiling side down through the x = -32 pad holes, heads flush with the ceiling face, cutting their own thread into the fairlead's rail (2.5 mm pilots). No glue. The pad holes need a 90 degree countersink so the heads sit flush: new bracket prints have it; on an already printed bracket, twist an 8 mm drill bit by hand in each of the two holes from the ceiling side until a screw head sits flush or just below.
 16. Wind the line onto the spool by turning it clockwise (seen from behind the motor). The free end leaves the spool on the pad side; thread it down through the fairlead, then slide it into the flap's slot from the flap's free end.
 17. Below the flap, in order: the **stopper**, an 8 mm hard plastic bead (slides on the line; this is what lifts the flap), **barrel swivel** (tie the line to it with an improved clinch or palomar knot; the stopper rests on it), **spider** tied to the swivel's other end. The spider is brought to about **30 g** (weight added inside the 13 g foam spider, so the wraps lie on the barrel at about twice the tension); keep it under 60 g until the bench says more.
-18. Unwind fully and measure from the barrel knot to the stopper, line straight but not pulled. That is the `line` value for the firmware.
+18. Leave the thread long. Once the board is wired and on its page, Measure the thread (`07_commissioning.md`, A new thread) lets it all out, winds it back counting, and saves `line` itself. Until that firmware is on your board: unwind fully, measure from the barrel knot to the stopper with the line straight but not pulled, and enter that as `line`.
 
 ![Spider home](img/fairlead_home.png)
 

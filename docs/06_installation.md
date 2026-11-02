@@ -1,5 +1,7 @@
 # 06 - Installation under the porch
 
+Two installs are in this doc. The first half is the ceiling install, drawn first and never built. **The one I'm building is the inverted install**, further down: the device turned over on two steel corner braces on the beam. If that's yours, skip to it; the build guide covers only that one.
+
 ![Install](img/install.png)
 
 ## Where it goes

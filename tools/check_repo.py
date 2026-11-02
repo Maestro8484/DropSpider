@@ -16,6 +16,8 @@ What it checks:
   links        every relative markdown link in *.md (root, docs/) points at a
                file that exists
   stl          every .stl name written in docs/ or README exists in cad/stl
+  generated    docs/parts.md and the README parts table match bom/BOM.csv (make_parts.py --check);
+               the README photos match the drop folder (make_media.py --check)
   version      tools/fw_version.py prints a version; a star means uncommitted
                firmware edits
   build        (--build only) pio run ends in SUCCESS
@@ -94,6 +96,13 @@ for p in sorted(["README.md"] + glob.glob("docs/*.md")):
     for i, line in enumerate(read(p).splitlines()):
         for name in set(re.findall(r"`([A-Za-z0-9_.-]+\.stl)`", line)):
             report(name in have, "stl: " + p + " line " + str(i + 1) + " names " + name)
+
+# generated pages: the parts table against the BOM, the README photos against the drop folder
+for tool, what in (("make_parts.py", "docs/parts.md and the README parts table match bom/BOM.csv"),
+                   ("make_media.py", "the README photos and video match the drop folder")):
+    r = subprocess.run([sys.executable, "tools/" + tool, "--check"], capture_output=True, text=True)
+    out = (r.stdout + r.stderr).strip().splitlines()
+    report(r.returncode == 0, "generated: " + what, out[-1] if out else "")
 
 # version
 v = subprocess.run([sys.executable, "tools/fw_version.py", "--show"], capture_output=True, text=True).stdout.strip()

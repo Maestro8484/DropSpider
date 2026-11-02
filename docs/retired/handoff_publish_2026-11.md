@@ -1,3 +1,5 @@
+Retired 2026-11-02, done: the README, parts table, print list, build guide pass, media scripts and posts landed (CHANGELOG.md 2026-11-02). Kept for the record; the live files are README.md, docs/parts.md, docs/05_assembly.md section A, docs/social/ and the two .bat files.
+
 # Brief: make DropSpider ready for strangers (README, parts with links, print and build directions, photos and video, social posts)
 
 One task, for a session running Fable 5.1 at effort HIGH with the owner answering one-line questions. The repo is already PUBLIC on GitHub (checked 2026-11-02 with `gh repo view`: visibility PUBLIC, 0 stars, no topics). This is the polish before it is shared anywhere, and the sharing text itself. Everything that can be a script is a script, so the owner's part is dropping files in a folder and double-clicking a .bat.

@@ -1,0 +1,1 @@
+# One line per picture: file name, colon, the caption that shows under it in the README. Edit the words, run add_photos.bat again.
